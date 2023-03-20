@@ -1,9 +1,11 @@
 import { Button } from "@mui/material"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
 
 export default function GitHub() {
     const router = useRouter()
+    const [accessToken, setAccessToken] = useState(null)
+
     useEffect(() => {
         if (!router.isReady) return
         if (router.query.code) {
@@ -22,6 +24,9 @@ export default function GitHub() {
                 .then(res => res.json())
                 .then(data => {
                     console.log(data)
+                    setAccessToken(data.accessToken)
+                    // set the url to the current url without the code
+                    router.replace(router.pathname, router.pathname, { shallow: true })
                 })
         }
     }, [router.isReady])
@@ -38,6 +43,28 @@ export default function GitHub() {
                 }).toString()}
             >
                 Github
+            </Button>
+            <Button variant="contained"
+                onClick={() => {
+                    fetch("/api/createRepo", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Accept": "application/json"
+                        },
+                        body: JSON.stringify({
+                            accessToken: accessToken,
+                            repoOwner: "QuixFolio",
+                            repoName: "basic-template"
+                        })
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            console.log(data)
+                        })
+                }}
+            >
+                Create Repo
             </Button>
         </div>
     )
