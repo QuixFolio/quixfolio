@@ -4,6 +4,7 @@ import { useRouter } from "next/router"
 export default function GitHub() {
     const router = useRouter()
     useState(() => {
+        console.log(router.isReady)
         if (!router.isReady) return
 
         console.log(router.query.code)
