@@ -58,7 +58,7 @@ export default function Templates() {
                         body: JSON.stringify({
                             accessToken: accessToken,
                             repoOwner: "QuixFolio",
-                            repoName: "basic-template"
+                            repoName: "8-bit-template"
                         })
                     })
                         .then(res => res.json())

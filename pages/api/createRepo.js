@@ -88,7 +88,6 @@ export default async function handler(req, res) {
             changeContent("name", name, "HarshilDB")
             changeContent("summary", summary, "This is a test")
             const $ = load(pages[name].content)
-            console.log($.html())
             let educationDiv = $("#education")
             // get first child of education div
             let edu1 = educationDiv.children().first().clone()
@@ -97,11 +96,11 @@ export default async function handler(req, res) {
             edu1.find("[start-year]").text("2019")
             edu1.find("[end-year]").text("2023")
             edu1.find("[major]").text("Computer Science")
-            edu1.find("[gpt]").text("2.6")
+            edu1.find("[gpa]").text("2.6")
             educationDiv.children().remove()
             educationDiv.append(edu1.clone())
             educationDiv.append(edu1.clone())
-            console.log($.html())
+            console.log(educationDiv.html())
             pages[name].content = $.html()
             await Promise.all(Object.keys(pages).map(async page => {
                 await fetch(`https://api.github.com/repos/${user}/${repoName}/contents/${page}`, {
