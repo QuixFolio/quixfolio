@@ -84,8 +84,25 @@ export default async function handler(req, res) {
             }
             const name = data.pages["name"]
             const summary = data.pages["summary"]
+            const education = data.pages["education"]
             changeContent("name", name, "HarshilDB")
             changeContent("summary", summary, "This is a test")
+            const $ = load(pages[name].content)
+            console.log($.html())
+            let educationDiv = $("#education")
+            // get first child of education div
+            let edu1 = educationDiv.children().first().clone()
+            // modify the education div with custom tag university
+            edu1.find("[university]").text("HarshilDB")
+            edu1.find("[start-year]").text("2019")
+            edu1.find("[end-year]").text("2023")
+            edu1.find("[major]").text("Computer Science")
+            edu1.find("[gpt]").text("2.6")
+            educationDiv.children().remove()
+            educationDiv.append(edu1.clone())
+            educationDiv.append(edu1.clone())
+            console.log($.html())
+            pages[name].content = $.html()
             await Promise.all(Object.keys(pages).map(async page => {
                 await fetch(`https://api.github.com/repos/${user}/${repoName}/contents/${page}`, {
                     method: "PUT",

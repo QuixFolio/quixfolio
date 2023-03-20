@@ -5,14 +5,16 @@ import { Button } from "@mui/material";
 
 export default function Templates() {
     const [templates, setTemplates] = useState([])
+    const [accessToken, setAccessToken] = useState(null)
     useEffect(() => {
-        let accessToken = localStorage.getItem("accessToken")
+        let token = localStorage.getItem("accessToken")
+        setAccessToken(token)
         fetch("/api/getTemplates", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json",
-                "Authorization": `Bearer ${accessToken}`
+                "Authorization": `Bearer ${token}`
             }
         })
             .then(res => res.json())
