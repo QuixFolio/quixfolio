@@ -1,30 +1,31 @@
 import { Button } from "@mui/material"
-import { useState } from "react"
+import { useEffect } from "react"
 import { useRouter } from "next/router"
+
 export default function GitHub() {
     const router = useRouter()
-    useState(() => {
-        console.log(router.isReady)
+    useEffect(() => {
         if (!router.isReady) return
-
-        console.log(router.query.code)
-        const code = router.query.code
-        fetch("/api/github", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            body: JSON.stringify({
-                code: code
+        if (router.query.code) {
+            console.log(router.query.code)
+            const code = router.query.code
+            fetch("/api/github", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify({
+                    code: code
+                })
             })
-        })
-            .then(res => res.json())
-            .then(data => {
-                console.log(data)
-            })
-
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data)
+                })
+        }
     }, [router.isReady])
+
     return (
         <div>
             <h1>GitHub</h1>
@@ -41,4 +42,3 @@ export default function GitHub() {
         </div>
     )
 }
-
