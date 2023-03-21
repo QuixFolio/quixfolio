@@ -254,7 +254,7 @@ export default function Templates() {
                                         return str.toUpperCase();
                                     })
                                     return (
-                                        <div>
+                                        <div key={index}>
                                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                                                 <h2>{label}</h2>
                                                 <Button variant="outlined"
