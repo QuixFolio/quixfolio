@@ -16,7 +16,7 @@ export default async function handler(req, res) {
             console.log(data)
             return data.login
         })
-    await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/generate`, {
+    let repo = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/generate`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -34,9 +34,26 @@ export default async function handler(req, res) {
         .then(res => res.json())
         .then(data => {
             console.log(data)
+            return data
         })
+    if (repo.message) {
+        repo = await fetch(`https://api.github.com/repos/${user}/${repoName}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                return data
+            })
+    }
+    let defaultBranch = repo.default_branch
     // read /user/reponame/quixfolio.json
-    await fetch(`https://raw.githubusercontent.com/${repoOwner}/${repoName}/main/quixfolio.json`, {
+    await fetch(`https://raw.githubusercontent.com/${repoOwner}/${repoName}/${defaultBranch}/quixfolio.json`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -92,7 +109,7 @@ export default async function handler(req, res) {
             // get first child of education div
             let edu1 = educationDiv.children().first().clone()
             // modify the education div with custom tag university
-            edu1.find("[university]").text("HarshilDB")
+            edu1.find("[university]").text("SUS University")
             edu1.find("[start-year]").text("2019")
             edu1.find("[end-year]").text("2023")
             edu1.find("[major]").text("Computer Science")

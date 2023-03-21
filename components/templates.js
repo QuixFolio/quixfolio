@@ -42,33 +42,33 @@ export default function Templates() {
                                     style={{ borderRadius: "10px", objectFit: "cover" }}
                                 />
                                 <p>{template.config.description}</p>
+                                <Button variant="contained"
+                                    onClick={() => {
+                                        fetch("/api/createRepo", {
+                                            method: "POST",
+                                            headers: {
+                                                "Content-Type": "application/json",
+                                                "Accept": "application/json"
+                                            },
+                                            body: JSON.stringify({
+                                                accessToken: accessToken,
+                                                repoOwner: "QuixFolio",
+                                                repoName: template.config.id
+                                            })
+                                        })
+                                            .then(res => res.json())
+                                            .then(data => {
+                                                console.log(data)
+                                            })
+                                    }}
+                                >
+                                    Create Repo
+                                </Button>
                             </Grid>
                         )
                     })
                 }
             </Grid>
-            <Button variant="contained"
-                onClick={() => {
-                    fetch("/api/createRepo", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Accept": "application/json"
-                        },
-                        body: JSON.stringify({
-                            accessToken: accessToken,
-                            repoOwner: "QuixFolio",
-                            repoName: "8-bit-template"
-                        })
-                    })
-                        .then(res => res.json())
-                        .then(data => {
-                            console.log(data)
-                        })
-                }}
-            >
-                Create Repo
-            </Button>
         </div>
     )
 }
