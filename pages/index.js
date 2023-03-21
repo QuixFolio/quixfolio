@@ -21,7 +21,6 @@ export default function Home() {
       <Navbar/>
       <Container>
         <Templates />
-        <ResumeForm />
       </Container>
     </>
   )
