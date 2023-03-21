@@ -95,7 +95,6 @@ export default function Templates() {
                         return (
                             <Grid xs={4} key={index}>
                                 <h2>{template.config.name}</h2>
-                                <p>{template.description}</p>
                                 <Image
                                     src={template.config.image}
                                     alt={template.config.name}
@@ -118,87 +117,6 @@ export default function Templates() {
                                         View Repo
                                     </Link>
                                 </div>
-                                {/* <Button variant="contained"
-                                    onClick={() => {
-                                        fetch("/api/createRepo", {
-                                            method: "POST",
-                                            headers: {
-                                                "Content-Type": "application/json",
-                                                "Accept": "application/json"
-                                            },
-                                            body: JSON.stringify({
-                                                accessToken: accessToken,
-                                                repoOwner: "QuixFolio",
-                                                repoName: template.config.id,
-                                                cloneName: "quixfolio-test",
-                                                name: "Harshil",
-                                                summary: "This is a summary",
-                                                education: [
-                                                    {
-                                                        university: "University of California, Davis",
-                                                        startYear: "2019",
-                                                        endYear: "2023",
-                                                        major: "Computer Science",
-                                                        gpa: "2.6",
-                                                        addInfo: "",
-                                                        releventCoursework: ""
-                                                    }
-                                                ],
-                                                workExperience: [
-                                                    {
-                                                        company: "Google",
-                                                        location: "Mountain View, CA",
-                                                        position: "Software Engineer",
-                                                        startDate: "June 2021",
-                                                        endDate: "Present",
-                                                        summary: "Worked on the Google Cloud Platform",
-                                                        image: "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png",
-                                                    },
-                                                ],
-                                                publication: [
-                                                    {
-                                                        publication: "test",
-                                                    }
-                                                ],
-                                                projects: [
-                                                    {
-                                                        name: "test",
-                                                        description: "test",
-                                                        source: "https://github.com/QuixFolio/basic-template",
-                                                        demo: "https://quixfolio.github.io/basic-template/",
-                                                        image: "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png",
-                                                        startDate: "May 2021",
-                                                        endDate: "June 2021",
-                                                    }
-                                                ],
-                                                skills: [
-                                                    {
-                                                        skills: "test",
-                                                    }
-                                                ],
-                                                achievements: [
-                                                    {
-                                                        name: "test",
-                                                        date: "2021",
-                                                        position: "test",
-                                                    }
-                                                ],
-                                                links: [
-                                                    {
-                                                        name: "Instagram",
-                                                        link: "https://instagram.com/"
-                                                    }
-                                                ],
-                                            })
-                                        })
-                                            .then(res => res.json())
-                                            .then(data => {
-                                                console.log(data)
-                                            })
-                                    }}
-                                >
-                                    Create Repo
-                                </Button> */}
                                 <Button variant="contained"
                                     onClick={() => {
                                         // set the repo owner and name

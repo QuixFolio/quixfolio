@@ -17,7 +17,7 @@ export default async function handler(req, res) {
             let templates = []
             for (let repo in data) {
                 if (data[repo].is_template) {
-                    let config = await fetch(`https://raw.githubusercontent.com/${data[repo].owner.login}/${data[repo].name}/main/quixfolio.json`, {
+                    let config = await fetch(`https://raw.githubusercontent.com/${data[repo].owner.login}/${data[repo].name}/gh-pages/quixfolio.json`, {
                         method: "GET",
                         headers: {
                             "Content-Type": "application/json",
@@ -32,7 +32,7 @@ export default async function handler(req, res) {
                         config.image = "/default.png"
                     }
                     else if (!config.image.includes("http")) {
-                        config.image = `https://raw.githubusercontent.com/${data[repo].owner.login}/${data[repo].name}/main/${config.image}`
+                        config.image = `https://raw.githubusercontent.com/${data[repo].owner.login}/${data[repo].name}/gh-pages/${config.image}`
                     }
                     data[repo].config = config
                     templates.push(data[repo])
