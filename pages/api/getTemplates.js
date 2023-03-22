@@ -4,11 +4,14 @@ export default async function handler(req, res) {
     // get all repos that are templates from QuixFolio
     const repos = await fetch("https://api.github.com/orgs/QuixFolio/repos", {
         method: "GET",
-        headers: {
+        headers: authorization === "Bearer " ? {
             "Content-Type": "application/json",
             "Accept": "application/json",
             "Authorization": authorization
-        }
+        } : {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
     })
         .then(res => res.json())
         .then(async data => {

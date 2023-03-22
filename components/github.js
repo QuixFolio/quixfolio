@@ -45,16 +45,18 @@ export default function GitHub() {
     return (<>
         {accessToken ?
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                <Button variant="contained" color="secondary" onClick={() => {
+                <Button variant="filled" color="secondary" onClick={() => {
                     localStorage.removeItem("accessToken")
+                    localStorage.removeItem("user")
                     setAccessToken(null)
+                    setUser(null)
                 }}>
                     Logout
                 </Button>
                 <Image src={user.avatar_url} alt={user.login} width={60} height={60} />
             </div>
             :
-            <Button variant="contained" color="secondary"
+            <Button variant="filled" color="primary"
                 href={"https://github.com/login/oauth/authorize?" + new URLSearchParams({
                     client_id: process.env.GITHUB_OAUTH_CLIENT_ID,
                     redirect_uri: process.env.GITHUB_OAUTH_REDIRECT_URL,

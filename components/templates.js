@@ -12,25 +12,30 @@ export default function Templates() {
     const [form, setForm] = useState({})
     const [sample, setSample] = useState({})
 
+    function getTemplates(token) {
+        fetch("/api/getTemplates", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        })
+            .then(res => res.json())
+            .then(data => {
+                setTemplates(data)
+            })
+    }
+
     useEffect(() => {
         if (typeof window !== "undefined") {
             window.addEventListener("storage", () => {
                 console.log("storage changed")
                 let token = localStorage.getItem("accessToken")
                 if (!token) return
-                fetch("/api/getTemplates", {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Accept": "application/json",
-                        "Authorization": `Bearer ${token}`
-                    }
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        setTemplates(data)
-                    })
+                getTemplates(token)
             })
+            getTemplates("");
         }
     }, [])
 

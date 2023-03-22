@@ -167,6 +167,7 @@ export default function ResumeForm({ templates, open, setOpen, form, setForm, sa
                     }
                     <LoadingButton variant="contained"
                         loading={loading}
+                        disabled={accessToken === null}
                         type="submit">
                         Submit
                     </LoadingButton>
