@@ -35,7 +35,7 @@ export default function Templates() {
                 if (!token) return
                 getTemplates(token)
             })
-            getTemplates("");
+            // getTemplates("");
         }
     }, [])
 

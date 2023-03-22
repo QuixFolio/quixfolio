@@ -8,9 +8,10 @@ import { LoadingButton } from "@mui/lab";
 export default function ResumeForm({ templates, open, setOpen, form, setForm, sample }) {
     const [accessToken, setAccessToken] = useState(null)
     const [loading, setLoading] = useState(false)
-
+    const [user, setUser] = useState(null)
     useEffect(() => {
         let token = localStorage.getItem("accessToken")
+        setUser(JSON.parse(localStorage.getItem("user")))
         setAccessToken(token)
     }, [])
     return (
@@ -20,6 +21,41 @@ export default function ResumeForm({ templates, open, setOpen, form, setForm, sa
             scroll="paper">
             <DialogTitle>Enter Details</DialogTitle>
             <DialogContent>
+                <Button
+                    variant="contained"
+                    onClick={() => {
+                        fetch("/api/fetchRepo", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Accept": "application/json"
+                            },
+                            body: JSON.stringify({
+                                accessToken: accessToken,
+                                user: user,
+                                cloneName: form.cloneName
+                            })
+                        })
+                            .then(res => res.json())
+                            .then(data => {
+                                console.log(data)
+                                data.repoName = form.repoName
+                                let keys = Object.keys(data)
+                                let nonArrayKeys = keys.filter(key => !Array.isArray(data[key]))
+                                nonArrayKeys.sort((a, b) => a.localeCompare(b))
+                                let arrayKeys = keys.filter(key => Array.isArray(data[key]))
+                                arrayKeys.sort((a, b) => a.localeCompare(b))
+                                let newKeys = [...nonArrayKeys, ...arrayKeys]
+                                let newData = {}
+                                newKeys.forEach(key => {
+                                    newData[key] = data[key]
+                                })
+                                setForm(newData)
+                            })
+                    }}
+                >
+                    Fetch
+                </Button>
                 <Box component="form"
                     sx={{
                         '& .MuiTextField-root': { m: 1 },

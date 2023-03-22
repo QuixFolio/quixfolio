@@ -2,6 +2,7 @@ import { Button } from "@mui/material"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
 import Image from "next/image"
+import Link from "next/link"
 
 export default function GitHub() {
     const router = useRouter()
@@ -54,7 +55,11 @@ export default function GitHub() {
                     Logout
                 </Button>
                 {user &&
-                    <Image src={user.avatar_url} alt={user.login} width={60} height={60} />
+                    <Link
+                        href={`https://github.com/${user.login}`}
+                    >
+                        <Image src={user.avatar_url} alt={user.login} width={60} height={60} />
+                    </Link>
                 }
             </div>
             :
