@@ -28,15 +28,14 @@ export default function Templates() {
     }
 
     useEffect(() => {
-        if (typeof window !== "undefined") {
-            window.addEventListener("storage", () => {
-                console.log("storage changed")
-                let token = localStorage.getItem("accessToken")
-                if (!token) return
-                getTemplates(token)
-            })
-            // getTemplates("");
-        }
+        // if (typeof window !== "undefined") {
+        window.addEventListener("storage", () => {
+            console.log("storage changed")
+            let token = localStorage.getItem("accessToken")
+            if (!token) return
+            getTemplates(token)
+        })
+        // getTemplates("");
     }, [])
 
     return (

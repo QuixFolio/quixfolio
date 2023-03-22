@@ -51,6 +51,7 @@ export default function GitHub() {
                     localStorage.removeItem("user")
                     setAccessToken(null)
                     setUser(null)
+                    window.dispatchEvent(new Event('storage'))
                 }}>
                     Logout
                 </Button>
