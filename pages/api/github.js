@@ -23,9 +23,25 @@ async function getAccessToken(code) {
   return accessToken
 }
 
+async function getUser(accessToken) {
+  const user = await fetch("https://api.github.com/user", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+      "Authorization": `Bearer ${accessToken}`
+    }
+  }).then(res => res.json())
+    .then(data => {
+      return data
+    })
+  return user
+}
+
 
 export default async function handler(req, res) {
   const code = req.body.code
   const accessToken = await getAccessToken(code)
-  res.status(200).json({ accessToken: accessToken })
+  const user = await getUser(accessToken)
+  res.status(200).json({ accessToken: accessToken, user: user })
 }
