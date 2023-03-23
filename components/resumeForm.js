@@ -45,7 +45,6 @@ export default function ResumeForm({ template, open, setOpen, form, accessToken 
             open={open}
             onClose={() => {
                 if (!loading) {
-                    setFormState({})
                     setOpen(false)
                 }
             }}
@@ -76,7 +75,6 @@ export default function ResumeForm({ template, open, setOpen, form, accessToken 
                                 if (data.error) {
                                     alert(data.error)
                                 } else {
-                                    setFormState({})
                                     setOpen(false)
                                 }
                             })
