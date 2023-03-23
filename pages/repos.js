@@ -132,7 +132,7 @@ export default function Repos({ token, user, templates }) {
                 open={open}
                 setOpen={setOpen}
                 form={form}
-                template={templates.find(t => t.name === form.repoName) ?? {}}
+                template={templates?.find(t => t.name === form.repoName) ?? {}}
                 accessToken={token}
             />
         </div >
