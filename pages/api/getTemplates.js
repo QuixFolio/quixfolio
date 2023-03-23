@@ -37,12 +37,13 @@ export default async function handler(req, res) {
                         .then(data => {
                             return JSON.parse(Buffer.from(data.content, 'base64').toString('ascii'))
                         })
+                    console.log(data)
                     console.log(config)
                     if (config.image === "") {
                         config.image = "/default.png"
                     }
                     else if (!config.image.includes("http")) {
-                        config.image = `https://raw.githubusercontent.com/${data[repo].owner.login}/${data[repo].name}/gh-pages/${config.image}`
+                        config.image = `https://raw.githubusercontent.com/${data[repo].owner.login}/${data[repo].name}/${data[repo].default_branch}/${config.image}`
                     }
                     data[repo].config = config
                     templates.push(data[repo])
