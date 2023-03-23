@@ -68,7 +68,7 @@ export default function GitHub() {
                 href={"https://github.com/login/oauth/authorize?" + new URLSearchParams({
                     client_id: process.env.GITHUB_OAUTH_CLIENT_ID,
                     redirect_uri: process.env.GITHUB_OAUTH_REDIRECT_URL,
-                    scope: "public_repo",
+                    scope: "delete_repo repo",
                     state: "1234567890"
                 }).toString()}
             >

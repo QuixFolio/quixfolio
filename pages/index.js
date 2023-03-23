@@ -7,6 +7,7 @@ import Templates from '@/components/templates'
 import { Container } from '@mui/system'
 import Navbar from '@/components/Navbar'
 import { useEffect, useState } from 'react'
+import Repos from './repos'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -39,6 +40,7 @@ export default function Home() {
       <Navbar />
       <Container>
         <Templates token={token} user={user} />
+        <Repos token={token} user={user} />
       </Container>
     </>
   )

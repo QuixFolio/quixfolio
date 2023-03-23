@@ -1,6 +1,5 @@
 export default async function handler(req, res) {
     let authorization = req.headers.authorization
-    console.log(authorization)
     // get all repos that are templates from QuixFolio
     const repos = await fetch("https://api.github.com/orgs/QuixFolio/repos", {
         method: "GET",
@@ -20,7 +19,6 @@ export default async function handler(req, res) {
     })
         .then(res => res.json())
         .then(async data => {
-            console.log(data)
             // return only those repos that are have is_template set to true
             let templates = []
             for (let repo in data) {
@@ -37,8 +35,6 @@ export default async function handler(req, res) {
                         .then(data => {
                             return JSON.parse(Buffer.from(data.content, 'base64').toString('ascii'))
                         })
-                    console.log(data)
-                    console.log(config)
                     if (config.image === "") {
                         config.image = "/default.png"
                     }
