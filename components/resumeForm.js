@@ -15,44 +15,6 @@ export default function ResumeForm({ user, templates, open, setOpen, form, setFo
             scroll="paper">
             <DialogTitle>Enter Details</DialogTitle>
             <DialogContent>
-                <Button
-                    variant="contained"
-                    onClick={async () => {
-                        await fetch("/api/fetchRepo", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                "Accept": "application/json"
-                            },
-                            body: JSON.stringify({
-                                accessToken: accessToken,
-                                user: user,
-                                cloneName: form.cloneName
-                            })
-                        })
-                            .then(res => res.json())
-                            .then(data => {
-                                console.log(data)
-                                if (data.error) {
-                                    return
-                                }
-                                data.repoName = form.repoName
-                                let keys = Object.keys(data)
-                                let nonArrayKeys = keys.filter(key => !Array.isArray(data[key]))
-                                nonArrayKeys.sort((a, b) => a.localeCompare(b))
-                                let arrayKeys = keys.filter(key => Array.isArray(data[key]))
-                                arrayKeys.sort((a, b) => a.localeCompare(b))
-                                let newKeys = [...nonArrayKeys, ...arrayKeys]
-                                let newData = {}
-                                newKeys.forEach(key => {
-                                    newData[key] = data[key]
-                                })
-                                setForm(newData)
-                            })
-                    }}
-                >
-                    Fetch
-                </Button>
                 <Box component="form"
                     sx={{
                         '& .MuiTextField-root': { m: 1 },
@@ -179,21 +141,60 @@ export default function ResumeForm({ user, templates, open, setOpen, form, setFo
                                     type = "text"
                                 }
                                 return (
-                                    <TextField
-                                        key={index}
-                                        label={label}
-                                        variant="outlined"
-                                        fullWidth
-                                        type={type}
-                                        value={form[key]}
-                                        disabled={key === "repoOwner" || key === "repoName"}
-                                        onChange={(e) => {
-                                            setForm({
-                                                ...form,
-                                                [key]: e.target.value
-                                            })
-                                        }}
-                                    />
+                                    <>
+                                        {
+                                            key === "cloneName" ? (
+                                                <Button
+                                                    variant="contained"
+                                                    onClick={async () => {
+                                                        await fetch("/api/fetchRepo", {
+                                                            method: "POST",
+                                                            headers: {
+                                                                "Content-Type": "application/json",
+                                                                "Accept": "application/json"
+                                                            },
+                                                            body: JSON.stringify({
+                                                                accessToken: accessToken,
+                                                                user: user,
+                                                                cloneName: form.cloneName
+                                                            })
+                                                        })
+                                                            .then(res => res.json())
+                                                            .then(data => {
+                                                                console.log(data)
+                                                                if (data.error) {
+                                                                    return
+                                                                }
+                                                                data.repoName = form.repoName
+                                                                // keep the same order as form
+                                                                let newForm = {}
+                                                                Object.keys(form).forEach(key => {
+                                                                    newForm[key] = data[key]
+                                                                })
+                                                                setForm(newForm)
+                                                            })
+                                                    }}
+                                                >
+                                                    Fetch
+                                                </Button>
+                                            ) : null
+                                        }
+                                        <TextField
+                                            key={index}
+                                            label={label}
+                                            variant="outlined"
+                                            fullWidth
+                                            type={type}
+                                            value={form[key]}
+                                            disabled={key === "repoOwner" || key === "repoName"}
+                                            onChange={(e) => {
+                                                setForm({
+                                                    ...form,
+                                                    [key]: e.target.value
+                                                })
+                                            }}
+                                        />
+                                    </>
                                 )
                             }
                         })

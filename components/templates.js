@@ -1,7 +1,7 @@
 import Image from "next/image"
 import { useEffect, useState } from "react"
 import Grid from '@mui/material/Grid';
-import { Button, Card, CardActions, CardContent, CardMedia, Dialog, DialogContent, DialogTitle, Paper, Skeleton, TextField, Typography } from "@mui/material";
+import { Button, Card, CardActions, CardContent, CardMedia, Chip, Dialog, DialogContent, DialogTitle, Paper, Skeleton, TextField, Typography } from "@mui/material";
 import Link from "next/link";
 import { Box } from "@mui/system";
 import ResumeForm from "./resumeForm";
@@ -76,6 +76,10 @@ export default function Templates({ user, token }) {
                                             <CardContent>
                                                 <Typography gutterBottom variant="h5" component="div">
                                                     {template.config.name}
+                                                    {template.has_pages ?
+                                                        <Chip label={"gh-pages"} sx={{ float: "right" }} />
+                                                        :
+                                                        null}
                                                 </Typography>
                                                 <Typography variant="body2" color="text.secondary">
                                                     {template.config.description}
