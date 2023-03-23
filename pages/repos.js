@@ -1,6 +1,5 @@
 import { LoadingButton } from "@mui/lab"
-import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
-import Link from "next/link"
+import { Button, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
 import { useEffect, useState } from "react"
 
 export default function Repos({ token, user }) {
