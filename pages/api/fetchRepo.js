@@ -15,7 +15,6 @@ export default async function handler(req, res) {
     })
         .then(res => res.json())
         .then(data => {
-            console.log(data)
             if (data.message) {
                 return res.status(500).json({ error: data.message })
             }
@@ -50,6 +49,9 @@ export default async function handler(req, res) {
         }
     }
     let form = {}
+    form.repoName = repoName
+    form.repoOwner = repoOwner
+    form.cloneName = repoName
     Object.keys(config.schema).forEach(key => {
         if (config.schema[key].page) {
             if (config.schema[key].type === "array") {
@@ -77,7 +79,6 @@ export default async function handler(req, res) {
                 let $ = load(pages[config.schema[key].page].content)
                 if (config.schema[key].type === "link") {
                     let link = $(`#${key}`).attr("href")
-                    console.log(link)
                     form[key] = link
                 }
                 else if (config.schema[key].type === "image") {
@@ -92,8 +93,5 @@ export default async function handler(req, res) {
             }
         }
     })
-    form.repoName = repoName
-    form.repoOwner = repoOwner
-    form.cloneName = repoName
     return res.status(200).json(form)
 }

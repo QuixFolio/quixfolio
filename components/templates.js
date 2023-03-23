@@ -1,38 +1,12 @@
-import Image from "next/image"
 import { useEffect, useState } from "react"
 import Grid from '@mui/material/Grid';
 import { Button, Card, CardActions, CardContent, CardMedia, Chip, Dialog, DialogContent, DialogTitle, Paper, Skeleton, TextField, Typography } from "@mui/material";
-import Link from "next/link";
-import { Box } from "@mui/system";
 import ResumeForm from "./resumeForm";
 
-export default function Templates({ user, token }) {
-    const [templates, setTemplates] = useState([])
+export default function Templates({ token, templates }) {
     const [open, setOpen] = useState(false)
     const [form, setForm] = useState({})
-    const [sample, setSample] = useState({})
-
-    function getTemplates(token) {
-        fetch("/api/getTemplates", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-                "Authorization": `Bearer ${token}`
-            }
-        })
-            .then(res => res.json())
-            .then(data => {
-                setTemplates(data)
-            })
-    }
-
-    useEffect(() => {
-        if (token) {
-            getTemplates(token)
-        }
-    }, [token])
-
+    const [currentTemplate, setCurrentTemplate] = useState({})
     return (
         <div>
             <h1>Templates</h1>
@@ -101,30 +75,7 @@ export default function Templates({ user, token }) {
                                                 <Button variant="contained"
                                                     size="small"
                                                     onClick={() => {
-                                                        let sampleObj = {}
-                                                        let formObj = {}
-                                                        Object.keys(template.config.schema).forEach(key => {
-                                                            if (template.config.schema[key].type === "array") {
-                                                                formObj[key] = []
-                                                                sampleObj[key] = {}
-                                                                Object.keys(template.config.schema[key].items).forEach(itemKey => {
-                                                                    sampleObj[key][itemKey] = template.config.schema[key].items[itemKey].default
-                                                                })
-                                                            }
-                                                            else {
-                                                                formObj[key] = template.config.schema[key].default
-                                                                sampleObj[key] = template.config.schema[key].default
-                                                            }
-                                                        })
-                                                        console.log(sampleObj)
-                                                        console.log(formObj)
-                                                        setSample(sampleObj)
-                                                        setForm(formObj)
-                                                        setForm({
-                                                            repoOwner: "QuixFolio",
-                                                            repoName: template.config.id,
-                                                            ...formObj
-                                                        })
+                                                        setCurrentTemplate(template.config.id)
                                                         setOpen(true)
                                                     }}
                                                 >
@@ -139,14 +90,11 @@ export default function Templates({ user, token }) {
                     </Grid>
             }
             <ResumeForm
+                template={templates.find(t => t.config.id === currentTemplate)}
                 open={open}
                 setOpen={setOpen}
                 form={form}
-                setForm={setForm}
-                sample={sample}
-                templates={templates}
                 accessToken={token}
-                user={user}
             />
         </div >
     )

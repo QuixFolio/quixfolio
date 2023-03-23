@@ -1,10 +1,14 @@
+import ResumeForm from "@/components/resumeForm"
 import { LoadingButton } from "@mui/lab"
 import { Button, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
 import { useEffect, useState } from "react"
 
-export default function Repos({ token, user }) {
+export default function Repos({ token, user, templates }) {
     const [repos, setRepos] = useState([])
     const [loading, setLoading] = useState([])
+    const [open, setOpen] = useState(false)
+    const [form, setForm] = useState({})
+
     useEffect(() => {
         if (token && user) {
             fetch("/api/getRepos", {
@@ -20,7 +24,6 @@ export default function Repos({ token, user }) {
             })
                 .then(res => res.json())
                 .then(data => {
-                    console.log(data)
                     setRepos(data)
                     setLoading(Array(data.length).fill(false))
                 })
@@ -62,6 +65,33 @@ export default function Repos({ token, user }) {
                                             </Link>
                                         </TableCell>
                                         <TableCell>
+                                            <Button
+                                                variant="contained"
+                                                onClick={async () => {
+                                                    await fetch("/api/fetchRepo", {
+                                                        method: "POST",
+                                                        headers: {
+                                                            "Content-Type": "application/json",
+                                                            "Accept": "application/json"
+                                                        },
+                                                        body: JSON.stringify({
+                                                            accessToken: token,
+                                                            cloneName: repo.name,
+                                                            user: user
+                                                        })
+                                                    }).then(res => res.json())
+                                                        .then(data => {
+                                                            // data.repoName = repo.templateRepository.name
+                                                            data.repoOwner = repo.templateRepository.owner.login
+                                                            data.cloneName = repo.name
+                                                            templates.find(t => t.name === repo.templateRepository.name).config.schema.cloneName.readOnly = true
+                                                            setForm(data)
+                                                            setOpen(true)
+                                                        })
+                                                }}
+                                            >
+                                                Update
+                                            </Button>
                                             <LoadingButton
                                                 loading={loading[i]}
                                                 variant="contained"
@@ -98,6 +128,13 @@ export default function Repos({ token, user }) {
                     </TableBody>
                 </Table>
             </TableContainer>
+            <ResumeForm
+                open={open}
+                setOpen={setOpen}
+                form={form}
+                template={templates.find(t => t.name === form.repoName) ?? {}}
+                accessToken={token}
+            />
         </div >
     )
 }

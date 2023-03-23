@@ -17,7 +17,6 @@ export default function GitHub() {
         }
         if (!router.isReady) return
         if (router.query.code) {
-            console.log(router.query.code)
             const code = router.query.code
             fetch("/api/github", {
                 method: "POST",
@@ -31,7 +30,6 @@ export default function GitHub() {
             })
                 .then(res => res.json())
                 .then(data => {
-                    console.log(data)
                     setAccessToken(data.accessToken)
                     setUser(data.user)
                     localStorage.setItem("accessToken", data.accessToken)

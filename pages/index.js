@@ -14,6 +14,8 @@ const inter = Inter({ subsets: ['latin'] })
 export default function Home() {
   const [token, setToken] = useState("")
   const [user, setUser] = useState({})
+  const [templates, setTemplates] = useState([])
+
   function getToken() {
     let token = localStorage.getItem("accessToken")
     let user = JSON.parse(localStorage.getItem("user"))
@@ -21,9 +23,29 @@ export default function Home() {
     setToken(token)
   }
 
+  function getTemplates(token) {
+    fetch("/api/getTemplates", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": `Bearer ${token}`
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        setTemplates(data)
+      })
+  }
+
+  useEffect(() => {
+    if (token) {
+      getTemplates(token)
+    }
+  }, [token])
+
   useEffect(() => {
     window.addEventListener("storage", () => {
-      console.log("storage changed")
       getToken()
     })
     getToken()
@@ -39,8 +61,8 @@ export default function Home() {
       </Head>
       <Navbar />
       <Container>
-        <Templates token={token} user={user} />
-        <Repos token={token} user={user} />
+        <Templates token={token} templates={templates} />
+        <Repos token={token} user={user} templates={templates} />
       </Container>
     </>
   )

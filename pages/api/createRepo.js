@@ -90,10 +90,10 @@ export default async function handler(req, res) {
             .then(res => res.json())
             .then(async data => {
                 console.log(data)
-                data = JSON.parse(Buffer.from(data.content, 'base64').toString('ascii'))
                 while (!await checkRepoStatus(req.body.cloneName, user, token)) {
                     await new Promise(resolve => setTimeout(resolve, 200))
                 }
+                data = JSON.parse(Buffer.from(data.content, 'base64').toString('ascii'))
                 let pages = {}
                 // fetch all of the pages in the schema
                 for (let page in data.schema) {

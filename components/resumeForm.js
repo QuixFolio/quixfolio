@@ -5,15 +5,49 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { LoadingButton } from "@mui/lab";
 
-export default function ResumeForm({ user, templates, open, setOpen, form, setForm, sample, accessToken }) {
+export default function ResumeForm({ template, open, setOpen, form, accessToken }) {
     const [loading, setLoading] = useState(false)
+    const [sample, setSample] = useState({})
+    const [formState, setFormState] = useState(form)
+
+    useEffect(() => {
+        if (!template || Object.keys(template).length === 0) return
+        console.log(template.config.schema)
+        let sampleObj = {}
+        let formObj = {}
+        Object.keys(template.config.schema).forEach(key => {
+            if (template.config.schema[key].type === "array") {
+                sampleObj[key] = {}
+                formObj[key] = form[key] ?? []
+                Object.keys(template.config.schema[key].items).forEach(itemKey => {
+                    sampleObj[key][itemKey] = template.config.schema[key].items[itemKey].default
+                })
+            }
+            else {
+                sampleObj[key] = template.config.schema[key].default
+                formObj[key] = form[key] ?? template.config.schema[key].default ?? " "
+            }
+        })
+        // move repoOwner, repoName, cloneName to the top
+        let repoOwner = formObj.repoOwner
+        let repoName = formObj.repoName
+        let cloneName = formObj.cloneName
+        delete formObj.repoOwner
+        delete formObj.repoName
+        delete formObj.cloneName
+        formObj = { repoOwner, repoName, cloneName, ...formObj }
+        setFormState(formObj)
+        setSample(sampleObj)
+    }, [template, form])
 
     return (
         <Dialog
             open={open}
             onClose={() => {
-                if (!loading)
+                if (!loading) {
+                    setFormState({})
                     setOpen(false)
+                }
             }}
             scroll="paper">
             <DialogTitle>Enter Details</DialogTitle>
@@ -33,23 +67,23 @@ export default function ResumeForm({ user, templates, open, setOpen, form, setFo
                             },
                             body: JSON.stringify({
                                 accessToken: accessToken,
-                                ...form
+                                ...formState
                             })
                         })
                             .then(res => res.json())
                             .then(data => {
-                                console.log(data)
                                 setLoading(false)
                                 if (data.error) {
                                     alert(data.error)
                                 } else {
+                                    setFormState({})
                                     setOpen(false)
                                 }
                             })
                     }}>
                     {
-                        Object.keys(form).map((key, index) => {
-                            if (Array.isArray(form[key])) {
+                        Object.keys(formState).map((key, index) => {
+                            if (Array.isArray(formState[key])) {
                                 let label = key.replace(/([A-Z])/g, ' $1').replace(/^./, function (str) {
                                     return str.toUpperCase();
                                 })
@@ -59,9 +93,9 @@ export default function ResumeForm({ user, templates, open, setOpen, form, setFo
                                             <h2>{label}</h2>
                                             <IconButton
                                                 onClick={() => {
-                                                    setForm({
-                                                        ...form,
-                                                        [key]: [...form[key], Object.assign({}, sample[key])]
+                                                    setFormState({
+                                                        ...formState,
+                                                        [key]: [...formState[key], Object.assign({}, sample[key])]
                                                     })
                                                 }}
                                             >
@@ -72,7 +106,7 @@ export default function ResumeForm({ user, templates, open, setOpen, form, setFo
                                             sx={{ '& > :not(style)': { m: 1 } }}
                                         >
                                             {
-                                                form[key].map((item, index) => {
+                                                formState[key].map((item, index) => {
                                                     return (
                                                         <Paper key={index} elevation={2}
                                                             style={{ padding: "1rem", display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexDirection: "column" }}
@@ -80,10 +114,10 @@ export default function ResumeForm({ user, templates, open, setOpen, form, setFo
                                                             <div>
                                                                 <IconButton
                                                                     onClick={() => {
-                                                                        let newItem = [...form[key]]
+                                                                        let newItem = [...formState[key]]
                                                                         newItem.splice(index, 1)
-                                                                        setForm({
-                                                                            ...form,
+                                                                        setFormState({
+                                                                            ...formState,
                                                                             [key]: newItem
                                                                         })
                                                                     }}
@@ -97,11 +131,13 @@ export default function ResumeForm({ user, templates, open, setOpen, form, setFo
                                                                     let label = k.replace(/([A-Z])/g, ' $1').replace(/^./, function (str) {
                                                                         return str.toUpperCase();
                                                                     })
-                                                                    let type = templates.find(template => template.config.id === form.repoName).config.schema[key].items[k].type
-                                                                    if (type === "integer") {
-                                                                        type = "number"
+                                                                    let type = template.config.schema[key].items[k].type
+                                                                    if (type === "textarea") {
+                                                                        type = "textarea"
                                                                     }
-                                                                    else {
+                                                                    else if (type === "integer") {
+                                                                        type = "number"
+                                                                    } else {
                                                                         type = "text"
                                                                     }
                                                                     return (
@@ -111,16 +147,18 @@ export default function ResumeForm({ user, templates, open, setOpen, form, setFo
                                                                             label={label}
                                                                             variant="outlined"
                                                                             value={item[k]}
+                                                                            multiline={type === "textarea"}
+                                                                            rows={type === "textarea" ? 3 : undefined}
                                                                             inputProps={{
                                                                                 type: type,
                                                                                 step: type === "number" ? "0.1" : undefined,
                                                                                 min: type === "number" ? "0" : undefined
                                                                             }}
                                                                             onChange={(e) => {
-                                                                                let newItem = [...form[key]]
+                                                                                let newItem = [...formState[key]]
                                                                                 newItem[index][k] = e.target.value
-                                                                                setForm({
-                                                                                    ...form,
+                                                                                setFormState({
+                                                                                    ...formState,
                                                                                     [key]: newItem
                                                                                 })
                                                                             }}
@@ -134,13 +172,14 @@ export default function ResumeForm({ user, templates, open, setOpen, form, setFo
 
                                     </div>
                                 )
-                            } else {
+                            }
+                            else {
                                 let label = key.replace(/([A-Z])/g, ' $1').replace(/^./, function (str) {
                                     return str.toUpperCase();
                                 })
-                                let type = templates.find(template => template.config.id === form.repoName).config.schema[key]?.type
-                                if (type === "string") {
-                                    type = "text"
+                                let type = template.config.schema[key]?.type
+                                if (type === "textarea") {
+                                    type = "textarea"
                                 }
                                 else if (type === "integer") {
                                     type = "number"
@@ -148,61 +187,24 @@ export default function ResumeForm({ user, templates, open, setOpen, form, setFo
                                     type = "text"
                                 }
                                 return (
-                                    <>
-                                        {
-                                            key === "cloneName" ? (
-                                                <Button
-                                                    variant="contained"
-                                                    onClick={async () => {
-                                                        await fetch("/api/fetchRepo", {
-                                                            method: "POST",
-                                                            headers: {
-                                                                "Content-Type": "application/json",
-                                                                "Accept": "application/json"
-                                                            },
-                                                            body: JSON.stringify({
-                                                                accessToken: accessToken,
-                                                                user: user,
-                                                                cloneName: form.cloneName
-                                                            })
-                                                        })
-                                                            .then(res => res.json())
-                                                            .then(data => {
-                                                                console.log(data)
-                                                                if (data.error) {
-                                                                    return
-                                                                }
-                                                                data.repoName = form.repoName
-                                                                data.repoOwner = form.repoOwner
-                                                                // keep the same order as form
-                                                                let newForm = {}
-                                                                Object.keys(form).forEach(key => {
-                                                                    newForm[key] = data[key]
-                                                                })
-                                                                setForm(newForm)
-                                                            })
-                                                    }}
-                                                >
-                                                    Fetch
-                                                </Button>
-                                            ) : null
-                                        }
-                                        <TextField
-                                            key={index}
-                                            label={label}
-                                            variant="outlined"
-                                            fullWidth
-                                            type={type}
-                                            value={form[key]}
-                                            disabled={key === "repoOwner" || key === "repoName"}
-                                            onChange={(e) => {
-                                                setForm({
-                                                    ...form,
-                                                    [key]: e.target.value
-                                                })
-                                            }}
-                                        />
-                                    </>
+                                    <TextField
+                                        key={index}
+                                        label={label}
+                                        variant="outlined"
+                                        fullWidth
+                                        type={type}
+                                        multiline={type === "textarea"}
+                                        rows={type === "textarea" ? 3 : undefined}
+                                        value={formState[key]}
+                                        // disabled={key === "repoOwner" || key === "repoName"}
+                                        disabled={template.config.schema[key]?.readOnly}
+                                        onChange={(e) => {
+                                            setFormState({
+                                                ...formState,
+                                                [key]: e.target.value
+                                            })
+                                        }}
+                                    />
                                 )
                             }
                         })

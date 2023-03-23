@@ -35,6 +35,20 @@ export default async function handler(req, res) {
                         .then(data => {
                             return JSON.parse(Buffer.from(data.content, 'base64').toString('ascii'))
                         })
+                    config.schema.repoOwner = {
+                        type: "string",
+                        default: data[repo].owner.login,
+                        readOnly: true
+                    }
+                    config.schema.repoName = {
+                        type: "string",
+                        default: config.id,
+                        readOnly: true
+                    }
+                    config.schema.cloneName = {
+                        type: "string",
+                        default: config.id,
+                    }
                     if (config.image === "") {
                         config.image = "/default.png"
                     }
