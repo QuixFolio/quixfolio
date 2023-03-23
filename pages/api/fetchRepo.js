@@ -75,8 +75,20 @@ export default async function handler(req, res) {
                 }
             } else {
                 let $ = load(pages[config.schema[key].page].content)
-                let element = $(`#${key}`)
-                form[key] = element.html()
+                if (config.schema[key].type === "link") {
+                    let link = $(`#${key}`).attr("href")
+                    console.log(link)
+                    form[key] = link
+                }
+                else if (config.schema[key].type === "image") {
+                    let image = $(`#${key}`).attr("src")
+                    form[key] = image
+                } else {
+                    let value = $(`#${key}`).text()
+                    form[key] = value
+                }
+                // let element = $(`#${key}`)
+                // form[key] = element.html()
             }
         }
     })

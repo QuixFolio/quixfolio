@@ -132,12 +132,11 @@ export default async function handler(req, res) {
                             Object.keys(item).forEach(k => {
                                 if (el.find(`[${k}]`).is("img")) {
                                     el.find(`[${k}]`).attr("src", item[k])
-                                    return
                                 } else if (el.find(`[${k}]`).is("a")) {
                                     el.find(`[${k}]`).attr("href", item[k])
-                                    return
+                                } else {
+                                    el.find(`[${k}]`).text(item[k])
                                 }
-                                el.find(`[${k}]`).text(item[k])
                             })
                             $(`#${key}`).append(el)
                         }
@@ -145,7 +144,14 @@ export default async function handler(req, res) {
                     } else {
                         try {
                             let $ = load(pages[data.schema[key].page].content)
-                            $(`#${key}`).text(req.body[key])
+                            // $(`#${key}`).text(req.body[key])
+                            if ($(`#${key}`).is("img")) {
+                                $(`#${key}`).attr("src", req.body[key])
+                            } else if ($(`#${key}`).is("a")) {
+                                $(`#${key}`).attr("href", req.body[key])
+                            } else {
+                                $(`#${key}`).text(req.body[key])
+                            }
                             pages[data.schema[key].page].content = $.html()
                         } catch (error) {
                         }
@@ -156,6 +162,7 @@ export default async function handler(req, res) {
 
                 for (let page in pages) {
                     console.log(page)
+                    console.log(pages[page].content)
                     // await Promise.all(Object.keys(pages).map(async page => {
                     await fetch(`https://api.github.com/repos/${user}/${req.body.cloneName}/contents/${page}`, {
                         method: "PUT",
@@ -166,7 +173,7 @@ export default async function handler(req, res) {
                         },
                         body: JSON.stringify({
                             "message": "Update page content",
-                            "content": btoa(pages[page].content),
+                            "content": Buffer.from(pages[page].content).toString('base64'),
                             "sha": pages[page].sha
                         })
                     }).then(res => res.json())
@@ -178,6 +185,7 @@ export default async function handler(req, res) {
 
         res.status(200).json({ status: "ok" })
     } catch (error) {
+        console.log(error)
         res.status(400).json({ status: "error", error: error.message })
     }
 }

@@ -40,7 +40,11 @@ export default function ResumeForm({ user, templates, open, setOpen, form, setFo
                             .then(data => {
                                 console.log(data)
                                 setLoading(false)
-                                setOpen(false)
+                                if (data.error) {
+                                    alert(data.error)
+                                } else {
+                                    setOpen(false)
+                                }
                             })
                     }}>
                     {
