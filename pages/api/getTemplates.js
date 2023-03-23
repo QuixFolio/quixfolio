@@ -25,17 +25,19 @@ export default async function handler(req, res) {
             let templates = []
             for (let repo in data) {
                 if (data[repo].is_template) {
-                    let config = await fetch(`https://raw.githubusercontent.com/${data[repo].owner.login}/${data[repo].name}/gh-pages/quixfolio.json`, {
+                    let config = await fetch(`https://api.github.com/repos/${data[repo].owner.login}/${data[repo].name}/contents/quixfolio.json`, {
                         method: "GET",
                         headers: {
                             "Content-Type": "application/json",
                             "Accept": "application/json",
+                            "Authorization": authorization
                         },
                     })
                         .then(res => res.json())
                         .then(data => {
-                            return data
+                            return JSON.parse(Buffer.from(data.content, 'base64').toString('ascii'))
                         })
+                    console.log(config)
                     if (config.image === "") {
                         config.image = "/default.png"
                     }

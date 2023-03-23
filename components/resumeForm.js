@@ -11,7 +11,10 @@ export default function ResumeForm({ user, templates, open, setOpen, form, setFo
     return (
         <Dialog
             open={open}
-            onClose={() => setOpen(false)}
+            onClose={() => {
+                if (!loading)
+                    setOpen(false)
+            }}
             scroll="paper">
             <DialogTitle>Enter Details</DialogTitle>
             <DialogContent>
@@ -166,6 +169,7 @@ export default function ResumeForm({ user, templates, open, setOpen, form, setFo
                                                                     return
                                                                 }
                                                                 data.repoName = form.repoName
+                                                                data.repoOwner = form.repoOwner
                                                                 // keep the same order as form
                                                                 let newForm = {}
                                                                 Object.keys(form).forEach(key => {
