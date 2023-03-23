@@ -15,6 +15,10 @@ export default async function handler(req, res) {
     })
         .then(res => res.json())
         .then(data => {
+            console.log(data)
+            if (data.message) {
+                return res.status(500).json({ error: data.message })
+            }
             let config = Buffer.from(data.content, 'base64').toString('ascii')
             config = JSON.parse(config)
             return config
@@ -76,8 +80,8 @@ export default async function handler(req, res) {
             }
         }
     })
-    form.repoName=repoName
-    form.repoOwner=repoOwner
-    form.cloneName=repoName
+    form.repoName = repoName
+    form.repoOwner = repoOwner
+    form.cloneName = repoName
     return res.status(200).json(form)
 }

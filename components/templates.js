@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Box } from "@mui/system";
 import ResumeForm from "./resumeForm";
 
-export default function Templates() {
+export default function Templates({ user, token }) {
     const [templates, setTemplates] = useState([])
     const [open, setOpen] = useState(false)
     const [form, setForm] = useState({})
@@ -28,15 +28,10 @@ export default function Templates() {
     }
 
     useEffect(() => {
-        // if (typeof window !== "undefined") {
-        window.addEventListener("storage", () => {
-            console.log("storage changed")
-            let token = localStorage.getItem("accessToken")
-            if (!token) return
+        if (token) {
             getTemplates(token)
-        })
-        // getTemplates("");
-    }, [])
+        }
+    }, [token])
 
     return (
         <div>
@@ -146,6 +141,8 @@ export default function Templates() {
                 setForm={setForm}
                 sample={sample}
                 templates={templates}
+                accessToken={token}
+                user={user}
             />
         </div >
     )

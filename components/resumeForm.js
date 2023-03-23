@@ -5,15 +5,9 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { LoadingButton } from "@mui/lab";
 
-export default function ResumeForm({ templates, open, setOpen, form, setForm, sample }) {
-    const [accessToken, setAccessToken] = useState(null)
+export default function ResumeForm({ user, templates, open, setOpen, form, setForm, sample, accessToken }) {
     const [loading, setLoading] = useState(false)
-    const [user, setUser] = useState(null)
-    useEffect(() => {
-        let token = localStorage.getItem("accessToken")
-        setUser(JSON.parse(localStorage.getItem("user")))
-        setAccessToken(token)
-    }, [])
+
     return (
         <Dialog
             open={open}
@@ -23,8 +17,8 @@ export default function ResumeForm({ templates, open, setOpen, form, setForm, sa
             <DialogContent>
                 <Button
                     variant="contained"
-                    onClick={() => {
-                        fetch("/api/fetchRepo", {
+                    onClick={async () => {
+                        await fetch("/api/fetchRepo", {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json",
@@ -39,6 +33,9 @@ export default function ResumeForm({ templates, open, setOpen, form, setForm, sa
                             .then(res => res.json())
                             .then(data => {
                                 console.log(data)
+                                if (data.error) {
+                                    return
+                                }
                                 data.repoName = form.repoName
                                 let keys = Object.keys(data)
                                 let nonArrayKeys = keys.filter(key => !Array.isArray(data[key]))

@@ -6,10 +6,28 @@ import ResumeForm from '@/components/forms'
 import Templates from '@/components/templates'
 import { Container } from '@mui/system'
 import Navbar from '@/components/Navbar'
+import { useEffect, useState } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
+  const [token, setToken] = useState("")
+  const [user, setUser] = useState({})
+  function getToken() {
+    let token = localStorage.getItem("accessToken")
+    let user = JSON.parse(localStorage.getItem("user"))
+    setUser(user)
+    setToken(token)
+  }
+
+  useEffect(() => {
+    window.addEventListener("storage", () => {
+      console.log("storage changed")
+      getToken()
+    })
+    getToken()
+  }, [])
+
   return (
     <>
       <Head>
@@ -18,9 +36,9 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Navbar/>
+      <Navbar />
       <Container>
-        <Templates />
+        <Templates token={token} user={user} />
       </Container>
     </>
   )
