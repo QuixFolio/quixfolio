@@ -67,8 +67,8 @@ export default function Repos({ token, user, templates }) {
                                         <TableCell>
                                             <Button
                                                 variant="contained"
-                                                onClick={async () => {
-                                                    await fetch("/api/fetchRepo", {
+                                                onClick={() => {
+                                                    fetch("/api/fetchRepo", {
                                                         method: "POST",
                                                         headers: {
                                                             "Content-Type": "application/json",
