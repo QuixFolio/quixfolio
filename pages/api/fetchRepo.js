@@ -4,8 +4,9 @@ export default async function handler(req, res) {
     const token = req.body.accessToken
     const repoOwner = req.body.user.login
     const repoName = req.body.cloneName
+    let config = req.body.config
     // fetch the /repo/quixfolio.json file
-    let config = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/quixfolio.json`, {
+    /* let config = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/quixfolio.json`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -21,7 +22,7 @@ export default async function handler(req, res) {
             let config = Buffer.from(data.content, 'base64').toString('ascii')
             config = JSON.parse(config)
             return config
-        })
+        }) */
     let pages = {}
     // fetch all of the pages in the schema
     for (let page in config.schema) {

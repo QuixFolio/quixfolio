@@ -77,7 +77,8 @@ export default function Repos({ token, user, templates }) {
                                                         body: JSON.stringify({
                                                             accessToken: token,
                                                             cloneName: repo.name,
-                                                            user: user
+                                                            user: user,
+                                                            config: templates.find(t => t.name === repo.templateRepository.name).config
                                                         })
                                                     }).then(res => res.json())
                                                         .then(data => {
