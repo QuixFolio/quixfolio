@@ -87,8 +87,8 @@ export default function Repos({ token, user, templates }) {
                                                             data.cloneName = repo.name
                                                             templates.find(t => t.name === repo.templateRepository.name).config.schema.cloneName.readOnly = true
                                                             setForm(data)
-                                                            setOpen(true)
                                                         })
+                                                    setOpen(true)
                                                 }}
                                             >
                                                 Update
