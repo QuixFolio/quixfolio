@@ -101,10 +101,10 @@ export default function About() {
                             <Card variant="outlined" sx={{ height: '100%' }}>
                                 <CardContent sx={{ textAlign: 'center' }} >
                                     <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
-                                        "Quixfolio is the best portfolio builder I've ever used!"
+                                        &quot;Quixfolio is the best portfolio builder I&apos;ve ever used!&quot;
                                     </Typography>
                                     <Typography variant="body1" color="text.secondary" sx={{ color: '#757575' }}>
-                                        "I've tried a lot of portfolio builders, but Quixfolio is by far the easiest to use. I love that I can customize my portfolio with just a few clicks, and I can switch between templates whenever I want."
+                                        &quot;I&apos;ve tried a lot of portfolio builders, but Quixfolio is by far the easiest to use. I love that I can customize my portfolio with just a few clicks, and I can switch between templates whenever I want.&quot;
                                     </Typography>
                                     <Typography variant="body1" color="text.secondary" sx={{ color: '#757575', marginTop: '24px' }}>
                                         - John Doe
@@ -116,10 +116,10 @@ export default function About() {
                             <Card variant="outlined" sx={{ height: '100%' }}>
                                 <CardContent sx={{ textAlign: 'center' }} >
                                     <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
-                                        "Quixfolio is the best portfolio builder I've ever used!"
+                                        &quot;Quixfolio is the best portfolio builder I&apos;ve ever used!&quot;
                                     </Typography>
                                     <Typography variant="body1" color="text.secondary" sx={{ color: '#757575' }}>
-                                        "I've tried a lot of portfolio builders, but Quixfolio is by far the easiest to use. I love that I can customize my portfolio with just a few clicks, and I can switch between templates whenever I want."
+                                        &quot;I&apos;ve tried a lot of portfolio builders, but Quixfolio is by far the easiest to use. I love that I can customize my portfolio with just a few clicks, and I can switch between templates whenever I want.&quot;
                                     </Typography>
                                     <Typography variant="body1" color="text.secondary" sx={{ color: '#757575', marginTop: '24px' }}>
                                         - John Doe
@@ -131,10 +131,10 @@ export default function About() {
                             <Card variant="outlined" sx={{ height: '100%' }}>
                                 <CardContent sx={{ textAlign: 'center' }} >
                                     <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
-                                        "Quixfolio is the best portfolio builder I've ever used!"
+                                        &quot;Quixfolio is the best portfolio builder I&apos;ve ever used!&quot;
                                     </Typography>
                                     <Typography variant="body1" color="text.secondary" sx={{ color: '#757575' }}>
-                                        "I've tried a lot of portfolio builders, but Quixfolio is by far the easiest to use. I love that I can customize my portfolio with just a few clicks, and I can switch between templates whenever I want."
+                                        &quot;I&apos;ve tried a lot of portfolio builders, but Quixfolio is by far the easiest to use. I love that I can customize my portfolio with just a few clicks, and I can switch between templates whenever I want.&quot;
                                     </Typography>
                                     <Typography variant="body1" color="text.secondary" sx={{ color: '#757575', marginTop: '24px' }}>
                                         - John Doe
