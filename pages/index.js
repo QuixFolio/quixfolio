@@ -15,6 +15,7 @@ export default function Home() {
   const [token, setToken] = useState("")
   const [user, setUser] = useState({})
   const [templates, setTemplates] = useState([])
+  const [update, setUpdate] = useState(false)
 
   function getToken() {
     let token = localStorage.getItem("accessToken")
@@ -61,8 +62,8 @@ export default function Home() {
       </Head>
       <Navbar />
       <Container>
-        <Templates token={token} templates={templates} />
-        <Repos token={token} user={user} templates={templates} />
+        <Templates token={token} templates={templates} user={user} update={update} setUpdate={setUpdate} />
+        <Repos token={token} user={user} templates={templates} update={update} setUpdate={setUpdate} />
       </Container>
     </>
   )

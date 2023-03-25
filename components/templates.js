@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react"
 import Grid from '@mui/material/Grid';
-import { Button, Card, CardActions, CardContent, CardMedia, Chip, Dialog, DialogContent, DialogTitle, Paper, Skeleton, TextField, Typography } from "@mui/material";
+import { Button, Card, CardActions, CardContent, CardMedia, Chip, Skeleton, Typography } from "@mui/material";
 import ResumeForm from "./resumeForm";
 
-export default function Templates({ token, templates }) {
+export default function Templates({ token, templates, user, update, setUpdate }) {
     const [open, setOpen] = useState(false)
-    const [form, setForm] = useState({})
     const [currentTemplate, setCurrentTemplate] = useState({})
+
     return (
         <div>
             <h1>Templates</h1>
@@ -93,8 +93,11 @@ export default function Templates({ token, templates }) {
                 template={templates.find(t => t.config.id === currentTemplate)}
                 open={open}
                 setOpen={setOpen}
-                form={form}
+                form={{}}
                 accessToken={token}
+                user={user}
+                setUpdate={setUpdate}
+                update={false}
             />
         </div >
     )

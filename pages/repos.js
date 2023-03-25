@@ -3,11 +3,12 @@ import { LoadingButton } from "@mui/lab"
 import { Button, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
 import { useEffect, useState } from "react"
 
-export default function Repos({ token, user, templates }) {
+export default function Repos({ token, user, templates, update, setUpdate }) {
     const [repos, setRepos] = useState([])
     const [loading, setLoading] = useState([])
     const [open, setOpen] = useState(false)
     const [form, setForm] = useState({})
+    const [currentTemplate, setCurrentTemplate] = useState({})
 
     useEffect(() => {
         if (token && user) {
@@ -28,7 +29,7 @@ export default function Repos({ token, user, templates }) {
                     setLoading(Array(data.length).fill(false))
                 })
         }
-    }, [token, user])
+    }, [token, user, update])
     return (
         <div>
             <h1>Repos</h1>
@@ -82,13 +83,14 @@ export default function Repos({ token, user, templates }) {
                                                         })
                                                     }).then(res => res.json())
                                                         .then(data => {
-                                                            // data.repoName = repo.templateRepository.name
                                                             data.repoOwner = repo.templateRepository.owner.login
                                                             data.cloneName = repo.name
-                                                            templates.find(t => t.name === repo.templateRepository.name).config.schema.cloneName.readOnly = true
+                                                            let template = JSON.parse(JSON.stringify(templates.find(t => t.name === repo.templateRepository.name)))
+                                                            template.config.schema.cloneName.readOnly = true
+                                                            setCurrentTemplate(template)
                                                             setForm(data)
+                                                            setOpen(true)
                                                         })
-                                                    setOpen(true)
                                                 }}
                                             >
                                                 Update
@@ -133,8 +135,10 @@ export default function Repos({ token, user, templates }) {
                 open={open}
                 setOpen={setOpen}
                 form={form}
-                template={templates?.find(t => t.name === form.repoName) ?? {}}
+                template={currentTemplate}
                 accessToken={token}
+                user={user}
+                setUpdate={setUpdate}
             />
         </div >
     )

@@ -5,14 +5,13 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { LoadingButton } from "@mui/lab";
 
-export default function ResumeForm({ template, open, setOpen, form, accessToken }) {
+export default function ResumeForm({ template, open, setOpen, form, accessToken, user, update, setUpdate }) {
     const [loading, setLoading] = useState(false)
     const [sample, setSample] = useState({})
     const [formState, setFormState] = useState(form)
 
     useEffect(() => {
         if (!template || Object.keys(template).length === 0) return
-        console.log(template.config.schema)
         let sampleObj = {}
         let formObj = {}
         Object.keys(template.config.schema).forEach(key => {
@@ -46,6 +45,7 @@ export default function ResumeForm({ template, open, setOpen, form, accessToken 
             onClose={() => {
                 if (!loading) {
                     setOpen(false)
+                    // setFormState({})
                 }
             }}
             scroll="paper">
@@ -66,6 +66,7 @@ export default function ResumeForm({ template, open, setOpen, form, accessToken 
                             },
                             body: JSON.stringify({
                                 accessToken: accessToken,
+                                username: user.login,
                                 ...formState
                             })
                         })
@@ -76,6 +77,7 @@ export default function ResumeForm({ template, open, setOpen, form, accessToken 
                                     alert(data.error)
                                 } else {
                                     setOpen(false)
+                                    setUpdate(!update)
                                 }
                             })
                     }}>

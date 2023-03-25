@@ -1,7 +1,8 @@
 import { load } from 'cheerio';
 
 async function checkRepoStatus(repoName, user, token) {
-    let status = await fetch(`https://api.github.com/repos/${user}/${repoName}`, {
+    // get commits for the repo
+    let status = await fetch(`https://api.github.com/repos/${user}/${repoName}/commits`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -15,9 +16,7 @@ async function checkRepoStatus(repoName, user, token) {
             if (data.message) {
                 return false
             }
-            else {
-                return true
-            }
+            return true
         })
     return status
 }
@@ -28,7 +27,8 @@ export default async function handler(req, res) {
         const repoOwner = req.body.repoOwner
         const repoName = req.body.repoName
         const cloneName = req.body.cloneName
-        const user = await fetch("https://api.github.com/user", {
+        const user = req.body.username
+        /* const user = await fetch("https://api.github.com/user", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -39,7 +39,7 @@ export default async function handler(req, res) {
             .then(data => {
                 console.log(data)
                 return data.login
-            })
+            }) */
         console.log(repoOwner, repoName, user, cloneName)
         let repo = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/generate`, {
             method: "POST",
@@ -77,8 +77,6 @@ export default async function handler(req, res) {
                     return data
                 })
         }
-        // read /user/reponame/quixfolio.json
-        console.log(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/quixfolio.json`)
         await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/quixfolio.json`, {
             method: "GET",
             headers: {
@@ -91,7 +89,7 @@ export default async function handler(req, res) {
             .then(async data => {
                 console.log(data)
                 while (!await checkRepoStatus(req.body.cloneName, user, token)) {
-                    await new Promise(resolve => setTimeout(resolve, 200))
+                    await new Promise(resolve => setTimeout(resolve, 1000))
                 }
                 data = JSON.parse(Buffer.from(data.content, 'base64').toString('ascii'))
                 let pages = {}
