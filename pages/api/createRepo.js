@@ -12,7 +12,6 @@ async function checkRepoStatus(repoName, user, token) {
     })
         .then(res => res.json())
         .then(data => {
-            console.log(data)
             if (data.message) {
                 return false
             }
@@ -77,6 +76,7 @@ export default async function handler(req, res) {
                     return data
                 })
         }
+        console.log(repoOwner, repoName, user, cloneName)
         await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/quixfolio.json`, {
             method: "GET",
             headers: {
@@ -91,6 +91,7 @@ export default async function handler(req, res) {
                 while (!await checkRepoStatus(req.body.cloneName, user, token)) {
                     await new Promise(resolve => setTimeout(resolve, 1000))
                 }
+                console.log(data)
                 data = JSON.parse(Buffer.from(data.content, 'base64').toString('ascii'))
                 let pages = {}
                 // fetch all of the pages in the schema

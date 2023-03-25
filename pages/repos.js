@@ -84,6 +84,7 @@ export default function Repos({ token, user, templates, update, setUpdate }) {
                                                     }).then(res => res.json())
                                                         .then(data => {
                                                             data.repoOwner = repo.templateRepository.owner.login
+                                                            data.repoName = repo.templateRepository.name
                                                             data.cloneName = repo.name
                                                             let template = JSON.parse(JSON.stringify(templates.find(t => t.name === repo.templateRepository.name)))
                                                             template.config.schema.cloneName.readOnly = true
