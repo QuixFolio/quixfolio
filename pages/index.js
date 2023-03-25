@@ -3,7 +3,7 @@ import Templates from '@/components/templates'
 import { Container } from '@mui/system'
 import Navbar from '@/components/Navbar'
 import { useEffect, useState } from 'react'
-import Repos from './repos'
+import Repos from '@/components/repos'
 import { useRouter } from 'next/router'
 
 export default function Home() {

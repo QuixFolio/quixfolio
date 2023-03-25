@@ -90,8 +90,8 @@ export default function Repos({ token, user, templates, update, setUpdate }) {
                                                             template.config.schema.cloneName.readOnly = true
                                                             setCurrentTemplate(template)
                                                             setForm(data)
-                                                            setOpen(true)
                                                         })
+                                                    setOpen(true)
                                                 }}
                                             >
                                                 Update

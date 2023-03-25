@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Button, Dialog, DialogContent, DialogTitle, IconButton, Paper, TextField } from "@mui/material";
+import { Button, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton, Paper, TextField } from "@mui/material";
 import { Box } from "@mui/system";
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -9,7 +9,6 @@ export default function ResumeForm({ template, open, setOpen, form, accessToken,
     const [loading, setLoading] = useState(false)
     const [sample, setSample] = useState({})
     const [formState, setFormState] = useState(form)
-
     useEffect(() => {
         if (!template || Object.keys(template).length === 0) return
         let sampleObj = {}
@@ -45,177 +44,186 @@ export default function ResumeForm({ template, open, setOpen, form, accessToken,
             onClose={() => {
                 if (!loading) {
                     setOpen(false)
-                    // setFormState({})
+                    // wait for the animation to finish
+                    setTimeout(() => {
+                        setFormState({})
+                    }, 300)
                 }
             }}
             scroll="paper">
             <DialogTitle>Enter Details</DialogTitle>
             <DialogContent>
-                <Box component="form"
-                    sx={{
-                        '& .MuiTextField-root': { m: 1 },
-                    }}
-                    onSubmit={async (e) => {
-                        e.preventDefault()
-                        setLoading(true)
-                        await fetch("/api/createRepo", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                "Accept": "application/json"
-                            },
-                            body: JSON.stringify({
-                                accessToken: accessToken,
-                                username: user.login,
-                                ...formState
-                            })
-                        })
-                            .then(res => res.json())
-                            .then(data => {
-                                setLoading(false)
-                                if (data.error) {
-                                    alert(data.error)
-                                } else {
-                                    setOpen(false)
-                                    setUpdate(!update)
-                                }
-                            })
-                    }}>
-                    {
-                        Object.keys(formState).map((key, index) => {
-                            if (Array.isArray(formState[key])) {
-                                let label = key.replace(/([A-Z])/g, ' $1').replace(/^./, function (str) {
-                                    return str.toUpperCase();
+                {Object.keys(formState).length === 0 ?
+                    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
+                        <CircularProgress />
+                    </Box>
+                    :
+                    <Box component="form"
+                        sx={{
+                            '& .MuiTextField-root': { m: 1 },
+                        }}
+                        onSubmit={async (e) => {
+                            e.preventDefault()
+                            setLoading(true)
+                            await fetch("/api/createRepo", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "Accept": "application/json"
+                                },
+                                body: JSON.stringify({
+                                    accessToken: accessToken,
+                                    username: user.login,
+                                    ...formState
                                 })
-                                return (
-                                    <div key={index}>
-                                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                                            <h2>{label}</h2>
-                                            <IconButton
-                                                onClick={() => {
-                                                    setFormState({
-                                                        ...formState,
-                                                        [key]: [...formState[key], Object.assign({}, sample[key])]
-                                                    })
-                                                }}
+                            })
+                                .then(res => res.json())
+                                .then(data => {
+                                    setLoading(false)
+                                    if (data.error) {
+                                        alert(data.error)
+                                    } else {
+                                        setOpen(false)
+                                        setUpdate(!update)
+                                    }
+                                })
+                        }}>
+                        {
+                            Object.keys(formState).map((key, index) => {
+                                if (Array.isArray(formState[key])) {
+                                    let label = key.replace(/([A-Z])/g, ' $1').replace(/^./, function (str) {
+                                        return str.toUpperCase();
+                                    })
+                                    return (
+                                        <div key={index}>
+                                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                                <h2>{label}</h2>
+                                                <IconButton
+                                                    onClick={() => {
+                                                        setFormState({
+                                                            ...formState,
+                                                            [key]: [...formState[key], Object.assign({}, sample[key])]
+                                                        })
+                                                    }}
+                                                >
+                                                    <AddIcon />
+                                                </IconButton>
+                                            </div>
+                                            <Box
+                                                sx={{ '& > :not(style)': { m: 1 } }}
                                             >
-                                                <AddIcon />
-                                            </IconButton>
-                                        </div>
-                                        <Box
-                                            sx={{ '& > :not(style)': { m: 1 } }}
-                                        >
-                                            {
-                                                formState[key].map((item, index) => {
-                                                    return (
-                                                        <Paper key={index} elevation={2}
-                                                            style={{ padding: "1rem", display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexDirection: "column" }}
-                                                        >
-                                                            <div>
-                                                                <IconButton
-                                                                    onClick={() => {
-                                                                        let newItem = [...formState[key]]
-                                                                        newItem.splice(index, 1)
-                                                                        setFormState({
-                                                                            ...formState,
-                                                                            [key]: newItem
+                                                {
+                                                    formState[key].map((item, index) => {
+                                                        return (
+                                                            <Paper key={index} elevation={2}
+                                                                style={{ padding: "1rem", display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexDirection: "column" }}
+                                                            >
+                                                                <div>
+                                                                    <IconButton
+                                                                        onClick={() => {
+                                                                            let newItem = [...formState[key]]
+                                                                            newItem.splice(index, 1)
+                                                                            setFormState({
+                                                                                ...formState,
+                                                                                [key]: newItem
+                                                                            })
+                                                                        }}
+                                                                    >
+                                                                        <DeleteIcon />
+                                                                    </IconButton>
+                                                                </div>
+                                                                {
+                                                                    Object.keys(item).map((k, i) => {
+                                                                        // convert camel case to sentence case
+                                                                        let label = k.replace(/([A-Z])/g, ' $1').replace(/^./, function (str) {
+                                                                            return str.toUpperCase();
                                                                         })
-                                                                    }}
-                                                                >
-                                                                    <DeleteIcon />
-                                                                </IconButton>
-                                                            </div>
-                                                            {
-                                                                Object.keys(item).map((k, i) => {
-                                                                    // convert camel case to sentence case
-                                                                    let label = k.replace(/([A-Z])/g, ' $1').replace(/^./, function (str) {
-                                                                        return str.toUpperCase();
-                                                                    })
-                                                                    let type = template.config.schema[key].items[k].type
-                                                                    if (type === "textarea") {
-                                                                        type = "textarea"
-                                                                    }
-                                                                    else if (type === "integer") {
-                                                                        type = "number"
-                                                                    } else {
-                                                                        type = "text"
-                                                                    }
-                                                                    return (
-                                                                        <TextField
-                                                                            fullWidth
-                                                                            key={i}
-                                                                            label={label}
-                                                                            variant="outlined"
-                                                                            value={item[k]}
-                                                                            multiline={type === "textarea"}
-                                                                            rows={type === "textarea" ? 3 : undefined}
-                                                                            inputProps={{
-                                                                                type: type,
-                                                                                step: type === "number" ? "0.1" : undefined,
-                                                                                min: type === "number" ? "0" : undefined
-                                                                            }}
-                                                                            onChange={(e) => {
-                                                                                let newItem = [...formState[key]]
-                                                                                newItem[index][k] = e.target.value
-                                                                                setFormState({
-                                                                                    ...formState,
-                                                                                    [key]: newItem
-                                                                                })
-                                                                            }}
-                                                                        />
-                                                                    )
-                                                                })}
-                                                        </Paper>
-                                                    )
-                                                })}
-                                        </Box>
+                                                                        let type = template.config.schema[key].items[k].type
+                                                                        if (type === "textarea") {
+                                                                            type = "textarea"
+                                                                        }
+                                                                        else if (type === "integer") {
+                                                                            type = "number"
+                                                                        } else {
+                                                                            type = "text"
+                                                                        }
+                                                                        return (
+                                                                            <TextField
+                                                                                fullWidth
+                                                                                key={i}
+                                                                                label={label}
+                                                                                variant="outlined"
+                                                                                value={item[k]}
+                                                                                multiline={type === "textarea"}
+                                                                                rows={type === "textarea" ? 3 : undefined}
+                                                                                inputProps={{
+                                                                                    type: type,
+                                                                                    step: type === "number" ? "0.1" : undefined,
+                                                                                    min: type === "number" ? "0" : undefined
+                                                                                }}
+                                                                                onChange={(e) => {
+                                                                                    let newItem = [...formState[key]]
+                                                                                    newItem[index][k] = e.target.value
+                                                                                    setFormState({
+                                                                                        ...formState,
+                                                                                        [key]: newItem
+                                                                                    })
+                                                                                }}
+                                                                            />
+                                                                        )
+                                                                    })}
+                                                            </Paper>
+                                                        )
+                                                    })}
+                                            </Box>
 
-                                    </div>
-                                )
-                            }
-                            else {
-                                let label = key.replace(/([A-Z])/g, ' $1').replace(/^./, function (str) {
-                                    return str.toUpperCase();
-                                })
-                                let type = template.config.schema[key]?.type
-                                if (type === "textarea") {
-                                    type = "textarea"
+                                        </div>
+                                    )
                                 }
-                                else if (type === "integer") {
-                                    type = "number"
-                                } else {
-                                    type = "text"
+                                else {
+                                    let label = key.replace(/([A-Z])/g, ' $1').replace(/^./, function (str) {
+                                        return str.toUpperCase();
+                                    })
+                                    let type = template.config.schema[key]?.type
+                                    if (type === "textarea") {
+                                        type = "textarea"
+                                    }
+                                    else if (type === "integer") {
+                                        type = "number"
+                                    } else {
+                                        type = "text"
+                                    }
+                                    return (
+                                        <TextField
+                                            key={index}
+                                            label={label}
+                                            variant="outlined"
+                                            fullWidth
+                                            type={type}
+                                            multiline={type === "textarea"}
+                                            rows={type === "textarea" ? 3 : undefined}
+                                            value={formState[key]}
+                                            // disabled={key === "repoOwner" || key === "repoName"}
+                                            disabled={template.config.schema[key]?.readOnly}
+                                            onChange={(e) => {
+                                                setFormState({
+                                                    ...formState,
+                                                    [key]: e.target.value
+                                                })
+                                            }}
+                                        />
+                                    )
                                 }
-                                return (
-                                    <TextField
-                                        key={index}
-                                        label={label}
-                                        variant="outlined"
-                                        fullWidth
-                                        type={type}
-                                        multiline={type === "textarea"}
-                                        rows={type === "textarea" ? 3 : undefined}
-                                        value={formState[key]}
-                                        // disabled={key === "repoOwner" || key === "repoName"}
-                                        disabled={template.config.schema[key]?.readOnly}
-                                        onChange={(e) => {
-                                            setFormState({
-                                                ...formState,
-                                                [key]: e.target.value
-                                            })
-                                        }}
-                                    />
-                                )
-                            }
-                        })
-                    }
-                    <LoadingButton variant="contained"
-                        loading={loading}
-                        disabled={accessToken === null}
-                        type="submit">
-                        Submit
-                    </LoadingButton>
-                </Box>
+                            })
+                        }
+                        <LoadingButton variant="contained"
+                            loading={loading}
+                            disabled={accessToken === null}
+                            type="submit">
+                            Submit
+                        </LoadingButton>
+                    </Box>
+                }
             </DialogContent>
         </Dialog>
     )
