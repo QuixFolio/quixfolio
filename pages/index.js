@@ -1,27 +1,30 @@
 import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import styles from '@/styles/Home.module.css'
-import ResumeForm from '@/components/forms'
 import Templates from '@/components/templates'
 import { Container } from '@mui/system'
 import Navbar from '@/components/Navbar'
 import { useEffect, useState } from 'react'
 import Repos from './repos'
-
-const inter = Inter({ subsets: ['latin'] })
+import { useRouter } from 'next/router'
 
 export default function Home() {
   const [token, setToken] = useState("")
   const [user, setUser] = useState({})
   const [templates, setTemplates] = useState([])
   const [update, setUpdate] = useState(false)
+  const router = useRouter()
 
   function getToken() {
     let token = localStorage.getItem("accessToken")
     let user = JSON.parse(localStorage.getItem("user"))
-    setUser(user)
-    setToken(token)
+    if (token) {
+      setToken(token)
+    } else {
+      // route to /about
+      router.push("/about")
+    }
+    if (user) {
+      setUser(user)
+    }
   }
 
   function getTemplates(token) {
@@ -46,10 +49,12 @@ export default function Home() {
   }, [token])
 
   useEffect(() => {
-    window.addEventListener("storage", () => {
+    if (window != undefined) {
+      window.addEventListener("storage", () => {
+        getToken()
+      })
       getToken()
-    })
-    getToken()
+    }
   }, [])
 
   return (
