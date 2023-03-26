@@ -56,8 +56,9 @@ export default function GitHub() {
                 {user &&
                     <Link
                         href={`https://github.com/${user.login}`}
+                        style={{ display: "flex", alignItems: "center", gap: "10px" }}
                     >
-                        <Image src={user.avatar_url} alt={user.login} width={60} height={60} />
+                        <Image src={user.avatar_url} alt={user.login} width={60} height={60} style={{ padding: "5px", cursor: "pointer" }} />
                     </Link>
                 }
             </div>

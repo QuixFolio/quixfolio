@@ -35,7 +35,7 @@ export default function Repos({ token, user, templates, update, setUpdate }) {
             <h1>Repos</h1>
             <TableContainer component={Paper}>
                 <Table>
-                    <TableHead>
+                    <TableHead >
                         <TableRow>
                             <TableCell>Name</TableCell>
                             <TableCell>Description</TableCell>
@@ -65,7 +65,7 @@ export default function Repos({ token, user, templates, update, setUpdate }) {
                                                 {repo.homepageUrl}
                                             </Link>
                                         </TableCell>
-                                        <TableCell>
+                                        <TableCell sx={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
                                             <Button
                                                 variant="contained"
                                                 onClick={() => {

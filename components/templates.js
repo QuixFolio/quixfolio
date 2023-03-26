@@ -50,10 +50,19 @@ export default function Templates({ token, templates, user, update, setUpdate })
                                             <CardContent>
                                                 <Typography gutterBottom variant="h5" component="div">
                                                     {template.config.name}
+                                                </Typography>
+                                                <Typography gutterBottom variant="body2" color="text.secondary" sx={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
                                                     {template.has_pages ?
-                                                        <Chip label={"gh-pages"} sx={{ float: "right" }} />
+                                                        <Chip label={"gh-pages"} />
                                                         :
                                                         null}
+                                                    {
+                                                        template.config.tags?.map((tag, index) => {
+                                                            return (
+                                                                <Chip key={index} label={tag} />
+                                                            )
+                                                        })
+                                                    }
                                                 </Typography>
                                                 <Typography variant="body2" color="text.secondary">
                                                     {template.config.description}

@@ -5,6 +5,7 @@ import Navbar from '@/components/Navbar'
 import { useEffect, useState } from 'react'
 import Repos from '@/components/repos'
 import { useRouter } from 'next/router'
+import ImportRepo from '@/components/importRepo'
 
 export default function Home() {
   const [token, setToken] = useState("")
@@ -66,9 +67,10 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Navbar />
-      <Container>
-        <Templates token={token} templates={templates} user={user} update={update} setUpdate={setUpdate} />
+      <Container sx={{ mb: 10 , mt: 10}}>
         <Repos token={token} user={user} templates={templates} update={update} setUpdate={setUpdate} />
+        <ImportRepo token={token} user={user} setUpdate={setUpdate} />
+        <Templates token={token} templates={templates} user={user} update={update} setUpdate={setUpdate} />
       </Container>
     </>
   )
