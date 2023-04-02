@@ -64,7 +64,7 @@ export default function Home() {
         <title>Quixfolio</title>
         <meta name="description" content="Create your own portfolio website in minutes" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.png" />
       </Head>
       <Navbar />
       <Container sx={{ mb: 10 , mt: 10}}>
