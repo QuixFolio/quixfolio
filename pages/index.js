@@ -52,10 +52,13 @@ export default function Home() {
 
   useEffect(() => {
     if (window != undefined) {
-      window.addEventListener("storage", () => {
+      // check if path contains query code
+      if (!window.location.search.includes("code")) {
+        window.addEventListener("storage", () => {
+          getToken()
+        })
         getToken()
-      })
-      getToken()
+      }
     }
   }, [])
 
