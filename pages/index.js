@@ -22,7 +22,9 @@ export default function Home() {
       setToken(token)
     } else {
       // route to /about
-      router.push("/about")
+      if (!window.location.search.includes("code")) {
+        router.push("/about")
+      }
     }
     if (user) {
       setUser(user)
@@ -52,13 +54,10 @@ export default function Home() {
 
   useEffect(() => {
     if (window != undefined) {
-      // check if path contains query code
-      if (!window.location.search.includes("code")) {
-        window.addEventListener("storage", () => {
-          getToken()
-        })
+      window.addEventListener("storage", () => {
         getToken()
-      }
+      })
+      getToken()
     }
   }, [])
 
