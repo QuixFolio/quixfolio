@@ -53,7 +53,9 @@ export default function About() {
                 </Button>
               </Grid>
               <Grid item>
-                <Button variant="outlined" size="large">
+                <Button variant="outlined" size="large"
+                  href="https://github.com/QuixFolio/quixfolio"
+                >
                   Learn More
                 </Button>
               </Grid>
