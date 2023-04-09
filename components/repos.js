@@ -100,27 +100,28 @@ export default function Repos({ token, user, templates, update, setUpdate }) {
                                                 loading={loading[i]}
                                                 variant="contained"
                                                 color="error"
-                                                onClick={() => {
-                                                    // set loading[i] to true
-                                                    setLoading(loading.map((l, j) => j === i ? true : l))
-                                                    fetch("/api/deleteRepo", {
-                                                        method: "POST",
-                                                        headers: {
-                                                            "Content-Type": "application/json",
-                                                            "Accept": "application/json"
-                                                        },
-                                                        body: JSON.stringify({
-                                                            accessToken: token,
-                                                            repoName: repo.name,
-                                                            owner: user.login
-                                                        })
+                                                href={`${repo.url}/settings`}
+                                            /* onClick={() => {
+                                                // set loading[i] to true
+                                                setLoading(loading.map((l, j) => j === i ? true : l))
+                                                fetch("/api/deleteRepo", {
+                                                    method: "POST",
+                                                    headers: {
+                                                        "Content-Type": "application/json",
+                                                        "Accept": "application/json"
+                                                    },
+                                                    body: JSON.stringify({
+                                                        accessToken: token,
+                                                        repoName: repo.name,
+                                                        owner: user.login
                                                     })
-                                                        .then(res => res.json())
-                                                        .then(data => {
-                                                            setLoading(loading.map((l, j) => j === i ? false : l))
-                                                            setRepos(repos.filter(r => r.name !== repo.name))
-                                                        })
-                                                }}
+                                                })
+                                                    .then(res => res.json())
+                                                    .then(data => {
+                                                        setLoading(loading.map((l, j) => j === i ? false : l))
+                                                        setRepos(repos.filter(r => r.name !== repo.name))
+                                                    })
+                                            }} */
                                             >
                                                 Delete
                                             </LoadingButton>

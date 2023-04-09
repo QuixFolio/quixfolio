@@ -42,7 +42,7 @@ export default function About() {
                     new URLSearchParams({
                       client_id: process.env.GITHUB_OAUTH_CLIENT_ID,
                       redirect_uri: process.env.GITHUB_OAUTH_REDIRECT_URL,
-                      scope: "delete_repo repo",
+                      scope: "public_repo",
                       state: "1234567890",
                     }).toString()
                   }
