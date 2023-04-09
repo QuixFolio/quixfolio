@@ -1,38 +1,27 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# QuixFolio - Portfolio Resume Website Builder
+
+Welcome to QuixFolio! QuixFolio is a website builder that allows you to create your own portfolio resume website quickly and easily. It's perfect for showcasing your work, skills, and achievements in a professional and visually appealing way.
 
 ## Getting Started
 
-First, run the development server:
+To use QuixFolio, simply follow these steps:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+1. Open https://quixfolio.vercel.app/ in your web browser.
+2. Click on the "Login with Github" button to log in to QuixFolio with your Github account.
+3. Once you're logged in, you'll see a list of templates to choose from. Click on the "Create Repo" button of the template you want to use.
+4. Fill in the information for your new repository, including the repository name and description, and click on "Submit". This will create a new repository on your Github account and host it on Github Pages.
+5. You can now use the repository list on the top of the page to update or delete your website as needed, or use the Github repository directly.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Updating Your Website
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+To update your website, use the update button for the corresponding repo at the top of your page. For further customisation, simply make changes to the code in your repository and push them to Github. Your changes will be automatically reflected on your website.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+## Deleting Your Website
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+To delete your website, use the delete button for the corresponding repo at the top of your page or simply delete the repository from your Github account. This will also remove your website from Github Pages.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Support
 
-## Learn More
+If you have any questions or issues with QuixFolio, please don't hesitate to create a Github issue in our repository at https://github.com/QuixFolio/quixfolio. We're always here to help!
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Thank you for using QuixFolio. We hope you enjoy using our platform to create your own portfolio resume website!
