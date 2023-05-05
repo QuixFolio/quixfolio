@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import Repos from '@/components/repos'
 import { useRouter } from 'next/router'
 import ImportRepo from '@/components/importRepo'
+import ReportBug from '@/components/reportBug'
 
 export default function Home() {
   const [token, setToken] = useState("")
@@ -21,7 +22,9 @@ export default function Home() {
       setToken(token)
     } else {
       // route to /about
-      router.push("/about")
+      if (!window.location.search.includes("code")) {
+        router.push("/about")
+      }
     }
     if (user) {
       setUser(user)
@@ -64,13 +67,15 @@ export default function Home() {
         <title>Quixfolio</title>
         <meta name="description" content="Create your own portfolio website in minutes" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.png" />
       </Head>
       <Navbar />
       <Container sx={{ mb: 10, mt: 10 }}>
         <Repos token={token} user={user} templates={templates} update={update} setUpdate={setUpdate} />
         <ImportRepo token={token} user={user} setUpdate={setUpdate} />
         <Templates token={token} templates={templates} user={user} update={update} setUpdate={setUpdate} />
+        {/* add a line */}
+        <ReportBug />
       </Container>
     </>
   )

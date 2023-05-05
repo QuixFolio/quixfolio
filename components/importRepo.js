@@ -33,17 +33,21 @@ export default function ImportRepo({ token, user, setUpdate }) {
                                 alert(data.error)
                                 return
                             }
+                            if (data.message) {
+                                alert(data.message)
+                                return
+                            }
                             setTemplate(data)
                             setOpen(true)
                         })
                 }}
             >
-                <TextField id="outlined-basic" label="GitHub URL" variant="outlined" helperText="Enter the repo link here" sx = {{width: "50vw"}}
+                <TextField id="outlined-basic" label="GitHub URL" variant="outlined" helperText="Enter the repo link here" sx={{ width: "50vw" }}
                     value={repo}
                     onChange={(event) => setRepo(event.target.value)}
                 />
                 <br />
-                <Button variant="contained" sx = {{marginTop: "1vw"}}
+                <Button variant="contained" sx={{ marginTop: "1vw" }}
                     type="submit">Import</Button>
             </Box>
             <ResumeForm

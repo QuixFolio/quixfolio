@@ -42,7 +42,7 @@ export default function About() {
                     new URLSearchParams({
                       client_id: process.env.GITHUB_OAUTH_CLIENT_ID,
                       redirect_uri: process.env.GITHUB_OAUTH_REDIRECT_URL,
-                      scope: "delete_repo repo",
+                      scope: "public_repo",
                       state: "1234567890",
                     }).toString()
                   }
@@ -53,7 +53,9 @@ export default function About() {
                 </Button>
               </Grid>
               <Grid item>
-                <Button variant="outlined" size="large">
+                <Button variant="outlined" size="large"
+                  href="https://github.com/QuixFolio/quixfolio"
+                >
                   Learn More
                 </Button>
               </Grid>
