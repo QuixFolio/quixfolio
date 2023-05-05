@@ -52,7 +52,6 @@ export default function ResumeForm({ template, open, setOpen, form, accessToken,
     }
 
     function onResumeImport(json) {
-        console.log(json)
         let newFormState = { ...formState }
         Object.keys(newFormState).forEach(key => {
             if (matchKey(key, json)) {
@@ -73,7 +72,6 @@ export default function ResumeForm({ template, open, setOpen, form, accessToken,
                 }
             }
         })
-        console.log(newFormState)
         setFormState(newFormState)
     }
 
