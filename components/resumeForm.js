@@ -4,11 +4,13 @@ import { Box } from "@mui/system";
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { LoadingButton } from "@mui/lab";
+import ImportResume from "./importResume";
 
 export default function ResumeForm({ template, open, setOpen, form, accessToken, user, update, setUpdate }) {
     const [loading, setLoading] = useState(false)
     const [sample, setSample] = useState({})
     const [formState, setFormState] = useState(form)
+
     useEffect(() => {
         if (!template || Object.keys(template).length === 0) return
         let sampleObj = {}
@@ -37,6 +39,41 @@ export default function ResumeForm({ template, open, setOpen, form, accessToken,
         setFormState(formObj)
         setSample(sampleObj)
     }, [template, form])
+
+    function matchKey(key, json) {
+        let found = false
+        Object.keys(json).forEach(jsonKey => {
+            if (jsonKey.toLowerCase().includes(key.toLowerCase())) {
+                found = true
+                return
+            }
+        })
+        return found
+    }
+
+    function onResumeImport(json) {
+        let newFormState = { ...formState }
+        Object.keys(newFormState).forEach(key => {
+            if (matchKey(key, json)) {
+                if (Array.isArray(newFormState[key])) {
+                    newFormState[key] = []
+                    for (let i = 0; i < json[key].length; i++) {
+                        let newObj = {}
+                        Object.keys(sample[key]).forEach(itemKey => {
+                            if (typeof json[key][i] === "object") {
+                                if (itemKey in json[key][i]) newObj[itemKey] = json[key][i][itemKey]
+                                else newObj[itemKey] = sample[key][itemKey]
+                            }
+                        })
+                        newFormState[key].push(newObj)
+                    }
+                } else {
+                    newFormState[key] = json[key]
+                }
+            }
+        })
+        setFormState(newFormState)
+    }
 
     return (
         <Dialog
@@ -216,12 +253,15 @@ export default function ResumeForm({ template, open, setOpen, form, accessToken,
                                 }
                             })
                         }
-                        <LoadingButton variant="contained"
-                            loading={loading}
-                            disabled={accessToken === null}
-                            type="submit">
-                            Submit
-                        </LoadingButton>
+                        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexDirection: "row" }}>
+                            <ImportResume callback={onResumeImport} />
+                            <LoadingButton variant="contained"
+                                loading={loading}
+                                disabled={accessToken === null}
+                                type="submit">
+                                Submit
+                            </LoadingButton>
+                        </Box>
                     </Box>
                 }
             </DialogContent>
