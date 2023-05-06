@@ -43,8 +43,10 @@ export default function ResumeForm({ template, open, setOpen, form, accessToken,
     function matchKey(key, json) {
         let found = false
         Object.keys(json).forEach(jsonKey => {
-            if (jsonKey.toLowerCase().includes(key.toLowerCase())) {
-                found = true
+            if (jsonKey.toLowerCase().includes(key.toLowerCase()) ||
+                key.toLowerCase().includes(jsonKey.toLowerCase()) ||
+                jsonKey.toLowerCase() === key.toLowerCase()) {
+                found = jsonKey
                 return
             }
         })
@@ -54,21 +56,32 @@ export default function ResumeForm({ template, open, setOpen, form, accessToken,
     function onResumeImport(json) {
         let newFormState = { ...formState }
         Object.keys(newFormState).forEach(key => {
-            if (matchKey(key, json)) {
+            let matchJsonKey = matchKey(key, json)
+            if (matchJsonKey) {
                 if (Array.isArray(newFormState[key])) {
                     newFormState[key] = []
-                    for (let i = 0; i < json[key].length; i++) {
+                    for (let i = 0; i < json[matchJsonKey].length; i++) {
                         let newObj = {}
+                        Object.keys(json[matchJsonKey][i]).forEach(itemKey => {
+                            let match = matchKey(itemKey, sample[key])
+                            if (typeof json[matchJsonKey][i] === "object") {
+                                if (match) {
+                                    newObj[match] = json[matchJsonKey][i][itemKey]
+                                }
+                                /* else {
+                                    newObj[itemKey] = sample[key][itemKey]
+                                } */
+                            }
+                        })
                         Object.keys(sample[key]).forEach(itemKey => {
-                            if (typeof json[key][i] === "object") {
-                                if (itemKey in json[key][i]) newObj[itemKey] = json[key][i][itemKey]
-                                else newObj[itemKey] = sample[key][itemKey]
+                            if (!(itemKey in newObj)) {
+                                newObj[itemKey] = sample[key][itemKey]
                             }
                         })
                         newFormState[key].push(newObj)
                     }
                 } else {
-                    newFormState[key] = json[key]
+                    newFormState[key] = json[matchJsonKey]
                 }
             }
         })

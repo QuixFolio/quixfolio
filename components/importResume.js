@@ -34,8 +34,9 @@ export default function ImportResume({ callback }) {
         return false;
     }
 
+    const sections = ["experience", "projects", "education", "skills", "awards", "publications", "languages", "interests", "references"];
+
     function checkSection(str) {
-        let sections = ["experience", "education", "skills", "awards", "publications", "languages", "interests", "references"];
         for (let i = 0; i < sections.length; i++) {
             if (str.toLowerCase().includes(sections[i])) {
                 return true;
@@ -88,55 +89,27 @@ export default function ImportResume({ callback }) {
                     let domain = link.split('.');
                     json.links.push({ "name": domain[0], "link": link });
                 }
-                if (item.str.trim().toLowerCase() === 'projects') {
-                    let fontName = item.fontName;
-                    json.projects = [];
-                    let projects = [];
-                    let j = i + 1;
-                    let first = resumeArray[j];
-                    let project = []
-                    for (j = i + 1; j < resumeArray.length; j++) {
-                        if (fontName === resumeArray[j].fontName && checkSection(resumeArray[j].str)) {
-                            break;
-                        }
-                        if (first.fontName === resumeArray[j].fontName) {
-                            if (project.length !== 0) {
-                                projects.push(project);
-                            }
-                            project = [];
-                        }
-                        project.push(resumeArray[j]);
+                if (!json.projects) {
+                    let projects = parseSection("projects", resumeArray, i);
+                    if (projects) {
+                        json.projects = projects.section;
+                        i = projects.i;
                     }
-                    i = j - 1;
-                    projects.push(project);
-                    for (let k = 0; k < projects.length; k++) {
-                        let project = projects[k];
-                        let jsonProject = {};
-                        jsonProject.name = project[0].str;
-                        jsonProject.description = "";
-                        jsonProject.links = [];
-                        for (let l = 1; l < project.length; l++) {
-                            let link = checkLink(project[l].str);
-                            if (link) {
-                                jsonProject.links.push(link);
-                                continue;
-                            }
-                            let date = checkDate(project[l].str);
-                            if (date) {
-                                if (!jsonProject.date) {
-                                    jsonProject.startDate = date[0];
-                                    if (date.length > 1) {
-                                        jsonProject.endDate = date[1];
-                                    }
-                                }
-                                else if (!jsonProject.endDate) {
-                                    jsonProject.endDate = date[0];
-                                }
-                                continue;
-                            }
-                            jsonProject.description += project[l].str;
-                        }
-                        json.projects.push(jsonProject);
+                }
+                if (!json.workExperience) {
+                    let work = parseSection("work experiences", resumeArray, i);
+                    if (work) {
+                        json.workExperience = work.section;
+                        json.experiences = work.section;
+                        json.experience = work.section;
+                        i = work.i;
+                    }
+                }
+                if (!json.education) {
+                    let education = parseSection("education", resumeArray, i);
+                    if (education) {
+                        json.education = education.section;
+                        i = education.i;
                     }
                 }
             }
@@ -144,6 +117,72 @@ export default function ImportResume({ callback }) {
         }).catch(function (reason) {
             console.error('Error: ' + reason);
         });
+    }
+
+    function parseSection(section, resumeArray, i) {
+        if (section.toLowerCase().includes(resumeArray[i].str.trim().toLowerCase())) {
+            let fontName = resumeArray[i].fontName;
+            let sections = [];
+            let sectionList = [];
+            let j = i + 1;
+            let first = resumeArray[j];
+            let sectionItem = []
+            for (j = i + 1; j < resumeArray.length; j++) {
+                if ((fontName === resumeArray[j].fontName && checkSection(resumeArray[j].str)) || j === resumeArray.length - 1) {
+                    break;
+                }
+                if (first.fontName === resumeArray[j].fontName) {
+                    if (sectionItem.length !== 0) {
+                        sectionList.push(sectionItem);
+                    }
+                    sectionItem = [];
+                }
+                sectionItem.push(resumeArray[j]);
+            }
+            i = j - 1;
+            sectionList.push(sectionItem);
+            for (let k = 0; k < sectionList.length; k++) {
+                let sectionItem = sectionList[k];
+                let jsonSectionItem = {};
+                jsonSectionItem.name = sectionItem[0].str;
+                jsonSectionItem.company = sectionItem[0].str;
+                jsonSectionItem.institution = sectionItem[0].str;
+                jsonSectionItem.university = sectionItem[0].str;
+                jsonSectionItem.description = "";
+                jsonSectionItem.summary = "";
+                jsonSectionItem.details = "";
+                jsonSectionItem.links = [];
+                for (let l = 1; l < sectionItem.length; l++) {
+                    let link = checkLink(sectionItem[l].str);
+                    if (link) {
+                        jsonSectionItem.links.push(link);
+                        continue;
+                    }
+                    let date = checkDate(sectionItem[l].str);
+                    if (date) {
+                        if (!jsonSectionItem.date) {
+                            jsonSectionItem.startDate = date[0];
+                            if (date.length > 1) {
+                                jsonSectionItem.endDate = date[1];
+                            }
+                        }
+                        else if (!jsonSectionItem.endDate) {
+                            jsonSectionItem.endDate = date[0];
+                        }
+                        continue;
+                    }
+                    jsonSectionItem.description += sectionItem[l].str;
+                    jsonSectionItem.summary += sectionItem[l].str;
+                    jsonSectionItem.details += sectionItem[l].str;
+                }
+                sections.push(jsonSectionItem);
+            }
+            return {
+                "section": sections,
+                "i": i
+            };
+        }
+        return null;
     }
 
     return (
