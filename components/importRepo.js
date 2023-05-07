@@ -43,6 +43,7 @@ export default function ImportRepo({ token, user, setUpdate }) {
                 }}
             >
                 <TextField id="outlined-basic" label="GitHub URL" variant="outlined" helperText="Enter the repo link here" sx={{ width: "50vw" }}
+                    name="repo"
                     value={repo}
                     onChange={(event) => setRepo(event.target.value)}
                 />

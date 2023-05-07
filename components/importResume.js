@@ -169,7 +169,8 @@ export default function ImportResume({ callback }) {
                 jsonSectionItem.description = "";
                 jsonSectionItem.summary = "";
                 jsonSectionItem.details = "";
-                jsonSectionItem.links = [];
+                jsonSectionItem.details = "";
+                jsonSectionItem.coursework = "";
                 for (let l = 1; l < sectionItem.length; l++) {
                     if (sectionItem[l].str.trim().length > 3) {
                         jsonSectionItem.title = sectionItem[l].str;
@@ -199,6 +200,7 @@ export default function ImportResume({ callback }) {
                     jsonSectionItem.description += sectionItem[l].str;
                     jsonSectionItem.summary += sectionItem[l].str;
                     jsonSectionItem.details += sectionItem[l].str;
+                    jsonSectionItem.coursework += sectionItem[l].str;
                 }
                 sections.push(jsonSectionItem);
             }
