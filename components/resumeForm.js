@@ -56,6 +56,7 @@ export default function ResumeForm({ template, open, setOpen, form, accessToken,
     function onResumeImport(json) {
         let newFormState = { ...formState }
         Object.keys(newFormState).forEach(key => {
+            if (key === "repoOwner" || key === "repoName" || key === "cloneName") return
             let matchJsonKey = matchKey(key, json)
             if (matchJsonKey) {
                 if (Array.isArray(newFormState[key])) {
@@ -68,9 +69,6 @@ export default function ResumeForm({ template, open, setOpen, form, accessToken,
                                 if (match) {
                                     newObj[match] = json[matchJsonKey][i][itemKey]
                                 }
-                                /* else {
-                                    newObj[itemKey] = sample[key][itemKey]
-                                } */
                             }
                         })
                         Object.keys(sample[key]).forEach(itemKey => {

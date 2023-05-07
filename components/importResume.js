@@ -16,10 +16,11 @@ export default function ImportResume({ callback }) {
     }
 
     function checkLink(str) {
-        let linkRegex = /^\b((?:https?:\/\/)?(?:\w+\.)+[a-zA-Z]{2,}(?::\d+)?(?:\/[\w#!:.?+=&%@!-\/]*)?)\b(?<!@)/gm;
+        let linkRegex = /((?:https?:\/\/)?(?:\w+\.)+[a-zA-Z]{2,}(?::\d+)?(?:\/[\w#!:.?+=&%@!-\/]*)?)\b(?<!@)/gm;
+        // let linkRegex = /^\b((?:https?:\/\/)?(?:\w+\.)+[a-zA-Z]{2,}(?::\d+)?(?:\/[\w#!:.?+=&%@!-\/]*)?)\b(?<!@)/gm;
         let link = str.match(linkRegex);
         if (link) {
-            return link[0];
+            return link;
         }
         return false;
     }
@@ -30,6 +31,15 @@ export default function ImportResume({ callback }) {
         let date = str.match(dateRegex);
         if (date) {
             return date;
+        }
+        return false;
+    }
+
+    function checkEmail(str) {
+        let emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/gm;
+        let email = str.match(emailRegex);
+        if (email) {
+            return email[0];
         }
         return false;
     }
@@ -74,7 +84,12 @@ export default function ImportResume({ callback }) {
                     });
                 });
             }
-            json.name = resumeArray[0].str;
+            for (let i = 0; i < resumeArray.length; i++) {
+                if (resumeArray[i].str.trim().split(' ').length == 2) {
+                    json.name = resumeArray[i].str;
+                    break;
+                }
+            }
             for (let i = 1; i < resumeArray.length; i++) {
                 let item = resumeArray[i];
                 let phone = checkPhone(item.str);
@@ -83,11 +98,14 @@ export default function ImportResume({ callback }) {
                 }
                 let link = checkLink(item.str);
                 if (link) {
-                    // links can be in the form of linkedin.com/in/username, github.com/username, or just a url
-                    // such as https://www.linkedin.com/in/username
-                    // get the domain name such as linkedin or github
-                    let domain = link.split('.');
-                    json.links.push({ "name": domain[0], "link": link });
+                    for (let j = 0; j < link.length; j++) {
+                        let domain = link[j].split('.');
+                        json.links.push({ "name": domain[0], "link": link[j] });
+                    }
+                }
+                let email = checkEmail(item.str);
+                if (email) {
+                    json.email = email;
                 }
                 if (!json.projects) {
                     let projects = parseSection("projects", resumeArray, i);
@@ -152,6 +170,13 @@ export default function ImportResume({ callback }) {
                 jsonSectionItem.summary = "";
                 jsonSectionItem.details = "";
                 jsonSectionItem.links = [];
+                for (let l = 1; l < sectionItem.length; l++) {
+                    if (sectionItem[l].str.trim().length > 3) {
+                        jsonSectionItem.title = sectionItem[l].str;
+                        jsonSectionItem.major = sectionItem[l].str;
+                        break;
+                    }
+                }
                 for (let l = 1; l < sectionItem.length; l++) {
                     let link = checkLink(sectionItem[l].str);
                     if (link) {
